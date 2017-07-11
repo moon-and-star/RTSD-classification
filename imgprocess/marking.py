@@ -290,17 +290,15 @@ def classification_marking(path, threshold=100, seed=42, test_ratio=0.2, val_rat
     reduced = remove_small(remove_unknown(gathered), threshold)
 
     train, test, val = split(reduced, test_ratio=test_ratio, val_ratio=val_ratio)
-    marking = {}
-    marking['train'] = train
-    marking['val'] = val
-    marking['test'] = test
+    marking = {'train': train, 'val': val, 'test': test}
     return marking
 
 
 
-def save_marking(marking, rootpath):
+def save_marking(marking, path, prefix):
+    print('saving markings')
     for phase in sorted(marking):
-        filename = "{}/classmark_{}.json".format(rootpath, phase)
+        filename = "{}/{}_{}.json".format(path, prefix, phase)
         with open(filename, 'w') as f:
             content = json.dumps(marking[phase], indent=2, sort_keys=True)
             f.write(content)
@@ -311,7 +309,5 @@ if __name__ == '__main__':
     print("detection marking -> classification marking")
     rootpath = '../global_data/Traffic_signs/RTSD'
     marking = classification_marking(rootpath, threshold=100, seed=42)
-    # marking = get_classification_marking()
-    # save_marking(marking)
-    # launch()
+    save_marking(marking, rootpath)
     
