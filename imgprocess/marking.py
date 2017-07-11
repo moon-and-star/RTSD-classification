@@ -20,10 +20,9 @@ def remove_ignored(signs):
             n_entries += 1
             new[image] = signs_list
 
-
     print("Pictures without ignored = {}".format(n_entries))
     print("Number of signs without ignored = {}\n".format(n_signs))
-    # pprint(new)
+    
     return new
 
 
@@ -32,138 +31,6 @@ def load_marking(filename):
         signs = json.load(f)
     print("Marking is loaded. ")
     return signs
-
-
-
-# def read_classes(path):
-#     classes = set()
-#     with open(path) as f:
-#         lines = f.readlines()[1:]
-#         for line in lines:
-#             s = line.split(",")
-#             classes.add(s[1].strip())
-
-#     return classes
-
-
-
-# def get_label_list(marking):
-#     labels = set()
-#     last = set()
-#     for name in sorted(marking):
-#         for sign_entry in marking[name]:
-#             class_name = sign_entry["sign_class"]
-#             if "unknown" in class_name:
-#                 last.add(class_name)
-#             else:
-#                 labels.add(class_name)
-#     # print(labels)         
-#     return sorted(labels) + sorted(last)
-
-
-
-# def get_label_set(marking):
-#     return set(get_label_list(marking))
-
-
-
-
-# def DictForClasses(classes):
-#     d = {}
-#     for name in sorted(classes):
-#         if not "unknown" in name:
-#             d[name]  = []
-#     return d
-
-
-
-# def save_stats(norm,  rootpath):
-#     with open("{}/stats.txt".format(rootpath), 'w') as f:
-#         stats = {}
-#         for label in sorted(norm["test"]):
-#             train_size = len(norm["train"][label])
-#             test_size = len(norm["test"][label])
-#             total = test_size + train_size
-#             stats[label] = "{:10}{:8}{:7}{:7}{:14.2}".format(label, train_size, test_size, total, float(test_size)/total)
-
-#         first = "{:10}{:>8}{:>7}{:>7}{:>14}". format("label", "train", "test", "total", "test/total")
-#         f.write(first+'\n')
-#         print(first)
-#         for label in sorted(stats):
-#             f.write(stats[label] + '\n')
-#             print(stats[label])
-
-
-
-
-# #marking = dict of 2 dicts (train and test dicts each containing lists of sign entries)
-# #swaps train/test for classes in which train < test; removes classes with toofew images
-# def  normalize(markings, classes):
-#     threshold = 10
-#     norm = {}; norm["train"], norm["test"] = {},{}
-
-#     for label in classes:
-#         train_size = len(markings["train"][label])
-#         test_size = len(markings["test"][label])
-
-#         #cut off classes with few images
-#         if (train_size + test_size) > threshold:
-#             if train_size < test_size: #then swap
-#                 norm["train"][label], norm["test"][label] = markings["test"][label], markings["train"][label]
-#                 train_size, test_size = test_size, train_size
-#             else:
-#                 norm["train"][label], norm["test"][label] = markings["train"][label], markings["test"][label]
-
-#     save_stats(norm, rootpath)
-#     return norm
-
-
-
-
-# #here marking is dict of lists of tuples: label: [(filename, entry_for_marking)]
-# def to_std_marking(marking):
-#     filenames = set()
-#     for label in sorted(marking): # for each sign class
-#         for entry in marking[label]: #for each class member
-#             filenames.add(entry[0]) #adding entry for filename
-
-
-#     new = {}
-#     i = 0
-#     for name in sorted(filenames):
-#         new[name] = []
-#     for label in sorted(marking):
-#         for entry in marking[label]:
-#             new[entry[0]] += [entry[1]]
-#             i += 1
-
-
-#     print("number of images in set = ", i)
-#     return new
-
-
-
-
-
-# def classification_marking(marking, classes):
-#     # new = marking
-#     new = {}
-#     for phase in ['train', 'test']:
-#         cdict = DictForClasses(classes)
-#         m = marking[phase]
-#         for name in sorted(m):
-#             for sign_entry in m[name]:
-#                 label =  sign_entry['sign_class']
-#                 if not ("unknown" in label) and (label in classes):
-#                     cdict[label] += [(name, sign_entry)]
-#         new[phase] = cdict
-
-#     new = normalize(new, classes)
-#     new['train'] = to_std_marking(new['train'])
-#     new['test'] = to_std_marking(new['test'])
-
-#     return new
-
 
          
 def get_classification_labels(classes):
