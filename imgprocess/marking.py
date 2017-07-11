@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import json
 import random
-from util.util import safe_mkdir
+from util.util import safe_mkdir, removekey
 from pprint import pprint
 
 
@@ -189,12 +189,6 @@ def gather_signs(path):
                 res.setdefault(sign["sign_class"].strip(), []).append(sign) 
     return res
 
-def removekey(d, key):
-    r = dict(d)
-    del r[key]
-    return r
-
-
 
 def remove_unknown(classes):
     for class_name in sorted(classes):
@@ -286,7 +280,7 @@ def split(classes, test_ratio=0.2, val_ratio=0):
 
     return train, test, val
         
-        
+  
 
 
 def classification_marking(path, threshold=100, seed=42, test_ratio=0.2, val_ratio=0.1):
@@ -296,15 +290,17 @@ def classification_marking(path, threshold=100, seed=42, test_ratio=0.2, val_rat
     reduced = remove_small(remove_unknown(gathered), threshold)
 
     train, test, val = split(reduced, test_ratio=test_ratio, val_ratio=val_ratio)
-    marking = (train, val, test)
-    pprint(val)
+    marking = {}
+    marking['train'] = train
+    marking['val'] = val
+    marking['test'] = test
     return marking
 
 
 
-def save_marking(marking):
-    for phase in ["train", "test"]:
-        filename = "{}/classification_marking_{}.json".format(rootpath, phase)
+def save_marking(marking, rootpath):
+    for phase in sorted(marking):
+        filename = "{}/classmark_{}.json".format(rootpath, phase)
         with open(filename, 'w') as f:
             content = json.dumps(marking[phase], indent=2, sort_keys=True)
             f.write(content)

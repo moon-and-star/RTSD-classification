@@ -5,6 +5,12 @@ from os import makedirs
 import json
 
 
+def removekey(d, key):
+    r = dict(d)
+    del r[key]
+    return r
+
+
 def load_image_mean(mean_path):
     if osp.exists(mean_path):
         return map(float, open(mean_path, 'r').read().split())
