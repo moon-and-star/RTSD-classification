@@ -2,6 +2,7 @@
 from pprint import pprint
 from imgprocess.preprocess import process
 from util.config import getConfig
+from marking import classification_marking, save_marking
 
 
 def crop2proc(args):
@@ -14,7 +15,21 @@ def crop2proc(args):
         process(rootpath, outpath, phase, border=img['border'])
 
 
+def process_marking(args):
+    config = getConfig(args.confpath)
+    img = config['img']
+    path = img['marking_path']
+    marking = classification_marking(
+                    path, 
+                    seed=config['randseed'],
+                    threshold=img['min_class_size'],
+                    test_ratio=img['test_ratio'],
+                    val_ratio=img['val_ratio'])
+    save_marking(marking, path, img['classmark_prefix'])
+
+
 def uncut2cropped(args): #full images to classification set
+    process_marking(args)
     pass
 
 

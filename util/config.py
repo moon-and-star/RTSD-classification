@@ -5,14 +5,20 @@ from pprint import pprint
 
 def getInitialConfig():
 	config = {}
+	config['randseed'] = 42
+
 	im = {}
 	im["uncut_path"] = "../global_data/Traffic_signs/RTSD/imgs"
+	im["marking_path"] = "../global_data/Traffic_signs/RTSD"
+	im["classmark_prefix"] = "classmarking"
 	im["cropped_path"] = "../global_data/Traffic_signs/RTSD/classification"
 	im["processed_path"] = "./local_data/RTSD"
 	im["img_size"] = 32
 	im["padding"] = 4
 	im["border"] = 'replicate' # black, grey; replicate
-	im["class_size_thresh"] = 300
+	im["min_class_size"] = 300
+	im["test_ratio"] = 0.2
+	im["val_ratio"] = 0.1
 	config["img"] = im
 
 	exp = {}
