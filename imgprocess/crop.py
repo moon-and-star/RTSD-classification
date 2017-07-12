@@ -50,25 +50,36 @@ def get_marking(marking_path, prefix):
 	return marking
 
 
-def class2lab(marking):
+def class2lab(marking, path=None):
 	mapping = {}
 
 	for class_id in sorted(marking):
 		c2l[class_id] = sorted(marking).index(class_id)
+	if path != None:
+		with open('{}/classes@labels.json', 'w') as f:
+			json.dump(mapping, f, indent=4)
+
+
 
 	return mapping
 	
 
 # def crop_and_save():
-	# for sign_entry in sorted_by_pict:	
+	# pass
 
 def process(img_path, marking_path, prefix, cropped_path):
 	marking = get_marking(marking_path, prefix)
-	class_mapping = class2lab(marking['train'])
+	class_mapping = class2lab(marking['train'], cropped_path)
+	sign_mapping = 
 
 	for phase in sorted(marking):
 		sorted_by_pict = sorted(marking[phase], key=lamda x: x['pict_name'])
 		# crop_and_save(sorted_by_pict, input_path, output_path, class_mapping)
+
+		img_id = 0
+		for sign_entry in sorted_by_pict:	
+			sign_mapping[phase][str(img_id)] = sign_entry
+
 
 # def main():
 # 	for phase in ["train", "test"]:
