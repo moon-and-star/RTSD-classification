@@ -30,6 +30,7 @@ def process_marking(args):
 
 def uncut2cropped(args): #full images to classification set
     process_marking(args)
+    # crop_and_save()
     pass
 
 

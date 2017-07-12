@@ -29,7 +29,7 @@ def remove_ignored(signs):
 def load_marking(filename):
     with open(filename) as f:
         signs = json.load(f)
-    print("Marking is loaded. ")
+    print("Marking is loaded.")
     return signs
 
          
