@@ -74,19 +74,25 @@ def lab2class(marking, path=None):
 # def crop_and_save():
 	# pass
 
-def sign2id(marking):
+def sign2id(marking, path=None):
 	mapping = {}
 	for phase in sorted(marking):
 		sorted_by_pict = sorted(marking[phase], key=lamda x: x['pict_name'])
 		for i, sign in enumerate(sorted_by_pict):
-			mapping[]
+			mapping[phase][str(i).zfill(6)] = sign
+
+		if path != None:
+			with open(path.format(phase), 'w') as f:
+				json.dump(mapping, f, indent=4)
+
+	return mapping
 
 
 def process(img_path, marking_path, prefix, cropped_path):
 	marking = get_marking(marking_path, prefix)
 	class2lab_mapping = class2lab(marking['train'], cropped_path + '/classes2labels.json')
 	lab2class_mapping = lab2class(marking['train'], cropped_path + '/labels2classes.json')
-
+	sign_mapping = sign2id(marking, cropped_path + '/id2sign_{}.json') #note: {} is for phase insertion (see sign2id definition)
 
 	for phase in sorted(marking):
 		
