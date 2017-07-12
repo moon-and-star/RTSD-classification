@@ -5,7 +5,7 @@ import cv2
 import matplotlib.pyplot as plt
 from util.util import safe_mkdir
 from marking import load_marking
-
+import os.path as osp
 
 
 
@@ -34,7 +34,6 @@ def save_l2n(lab2num):
 		for name in sorted(lab2num):
 			f.write('{},{}\n'.format(lab2num[name], name))
 
-import os.path as osp
 
 def get_marking(marking_path, prefix):
 	marking = {}
@@ -56,10 +55,18 @@ def class2lab(marking, path=None):
 	for class_id in sorted(marking):
 		c2l[class_id] = sorted(marking).index(class_id)
 	if path != None:
-		with open('{}/classes@labels.json', 'w') as f:
+		with open(path, 'w') as f:
 			json.dump(mapping, f, indent=4)
 
 
+	return mapping
+
+def lab2class(marking, path=None):
+	mapping = {y:x for x,y in class2lab(marking)}
+
+	if path != None:
+		with open(path, 'w') as f:
+			json.dump(mapping, f, indent=4)
 
 	return mapping
 	
@@ -67,17 +74,26 @@ def class2lab(marking, path=None):
 # def crop_and_save():
 	# pass
 
-def process(img_path, marking_path, prefix, cropped_path):
-	marking = get_marking(marking_path, prefix)
-	class_mapping = class2lab(marking['train'], cropped_path)
-	sign_mapping = 
-
+def sign2id(marking):
+	mapping = {}
 	for phase in sorted(marking):
 		sorted_by_pict = sorted(marking[phase], key=lamda x: x['pict_name'])
+		for i, sign in enumerate(sorted_by_pict):
+			mapping[]
+
+
+def process(img_path, marking_path, prefix, cropped_path):
+	marking = get_marking(marking_path, prefix)
+	class2lab_mapping = class2lab(marking['train'], cropped_path + '/classes2labels.json')
+	lab2class_mapping = lab2class(marking['train'], cropped_path + '/labels2classes.json')
+
+
+	for phase in sorted(marking):
+		
 		# crop_and_save(sorted_by_pict, input_path, output_path, class_mapping)
 
 		img_id = 0
-		for sign_entry in sorted_by_pict:	
+		for i, sign_entry in sign_mapping[phase]:	
 			sign_mapping[phase][str(img_id)] = sign_entry
 
 
