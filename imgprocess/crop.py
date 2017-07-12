@@ -9,14 +9,16 @@ import os.path as osp
 
 
 
-def crop_sign(name, entry):
-	img = cv2.imread('{}/imgs/{}'.format(rootpath, name))
+def crop_sign(path, entry):
+	name = entry['pict_name']
+	img = cv2.imread('{}/imgs/{}'.format(path, name))
 	m, n, _ = img.shape
 	x, y, w, h = entry['x'], entry['y'], entry['w'], entry['h']
 
 	x1, x2 = max(0,x), min(x + w, n)
 	y1, y2 = max(0,y), min(y + h, m)
 	cropped = img[y1 : y2, x1 : x2]
+
 	return cropped
 
 
@@ -71,15 +73,14 @@ def lab2class(marking, path=None):
 	return mapping
 	
 
-# def crop_and_save():
-	# pass
 
 def sign2id(marking, path=None):
 	mapping = {}
 	for phase in sorted(marking):
 		sorted_by_pict = sorted(marking[phase], key=lamda x: x['pict_name'])
 		for i, sign in enumerate(sorted_by_pict):
-			mapping[phase][str(i).zfill(6)] = sign
+			name = "{}.png".format(str(i).zfill(6))
+			mapping[phase][name] = sign
 
 		if path != None:
 			with open(path.format(phase), 'w') as f:
@@ -88,19 +89,26 @@ def sign2id(marking, path=None):
 	return mapping
 
 
+def crop_and_save(sign_mapping, input_path, output_path, class_mapping):
+	for phase in sorted(sign_mapping):
+		for sign_name in sorted(sign_mapping[phase]):
+			sign_entry = sign_mapping[phase][sign_name]
+			cropped = crop_sign(input_path, sign_entry)
+
+			label = class_mapping[sign_entry['class_id']]
+			short_path = '{label}/{sign_name}'.format(**locals())
+			long_path = '{output_path}/{short_path}'.format(**locals())
+
+
+
 def process(img_path, marking_path, prefix, cropped_path):
 	marking = get_marking(marking_path, prefix)
 	class2lab_mapping = class2lab(marking['train'], cropped_path + '/classes2labels.json')
 	lab2class_mapping = lab2class(marking['train'], cropped_path + '/labels2classes.json')
 	sign_mapping = sign2id(marking, cropped_path + '/id2sign_{}.json') #note: {} is for phase insertion (see sign2id definition)
 
-	for phase in sorted(marking):
-		
-		# crop_and_save(sorted_by_pict, input_path, output_path, class_mapping)
+	crop_and_save(sign_mapping, class_mapping, input_path, output_path)
 
-		img_id = 0
-		for i, sign_entry in sign_mapping[phase]:	
-			sign_mapping[phase][str(img_id)] = sign_entry
 
 
 # def main():
