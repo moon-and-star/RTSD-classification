@@ -31,6 +31,7 @@ def process_marking(args):
     save_marking(marking, path, img['classmark_prefix'])
 
 
+
 def process_imgs(args):
     img = getConfig(args.confpath)['img']
     marking = load_classification_marking(img['marking_path'], img['classmark_prefix'])
@@ -39,7 +40,7 @@ def process_imgs(args):
 
 
 def uncut2cropped(args): #full images to classification set
-    # process_marking(args)
+    process_marking(args)
     process_imgs(args)
     
 
