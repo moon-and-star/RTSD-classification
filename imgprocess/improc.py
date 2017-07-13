@@ -3,6 +3,8 @@ from pprint import pprint
 from imgprocess.preprocess import process
 from util.config import getConfig
 from marking import classification_marking, save_marking
+from crop import marking2cropped
+from marking import load_classification_marking
 
 
 def crop2proc(args):
@@ -13,6 +15,7 @@ def crop2proc(args):
 
     for phase in ["train", "test"]:
         process(rootpath, outpath, phase, border=img['border'])
+
 
 
 def process_marking(args):
@@ -28,10 +31,17 @@ def process_marking(args):
     save_marking(marking, path, img['classmark_prefix'])
 
 
+def process_imgs(args):
+    img = getConfig(args.confpath)['img']
+    marking = load_classification_marking(img['marking_path'], img['classmark_prefix'])
+    img_path, cropped_path = img['uncut_path'], img['cropped_path']
+    marking2cropped(marking=marking, img_path=img_path, cropped_path=cropped_path)
+
+
 def uncut2cropped(args): #full images to classification set
-    process_marking(args)
-    # crop_and_save()
-    pass
+    # process_marking(args)
+    process_imgs(args)
+    
 
 
 def improc(args):
