@@ -5,13 +5,12 @@ import cv2
 import matplotlib.pyplot as plt
 from util.util import safe_mkdir
 from marking import load_marking
-import os.path as osp
 
 
 
 def crop_sign(path, entry):
 	name = entry['pict_name']
-	img = cv2.imread('{}/imgs/{}'.format(path, name))
+	img = cv2.imread('{}/{}'.format(path, name))
 	m, n, _ = img.shape
 	x, y, w, h = entry['x'], entry['y'], entry['w'], entry['h']
 
@@ -22,8 +21,8 @@ def crop_sign(path, entry):
 	return cropped
 
 
-def save_gt(gt, phase):
-	path = '{}/{}/gt_{}.txt'.format(rootpath, data_folder, phase)
+def save_gt(gt, path, phase):
+	path = '{}/gt_{}.txt'.format(path, phase)
 	with open(path, 'w') as f:
 		for pair in sorted(gt):
 			f.write('{},{}\n'.format(pair[0], pair[1]))
@@ -37,34 +36,22 @@ def save_l2n(lab2num):
 			f.write('{},{}\n'.format(lab2num[name], name))
 
 
-def get_marking(marking_path, prefix):
-	marking = {}
-
-	for phase in ['train', 'test', 'val']:
-		path = '{}/{}_{}.json'.format(marking_path, prefix, phase)
-		if osp.exists(path):
-			marking[phase] = load_marking(path)
-		else:
-			marking[phase] = None
-			print("WARNING: no {} marking file found.".format(phase))
-	
-	return marking
-
-
-def class2lab(marking, path=None):
+def class2lab(marking, path=None): # marking without phase 
 	mapping = {}
 
-	for class_id in sorted(marking):
-		c2l[class_id] = sorted(marking).index(class_id)
+	for class_id in marking:
+		mapping[class_id] = sorted(marking).index(class_id)
+
 	if path != None:
 		with open(path, 'w') as f:
 			json.dump(mapping, f, indent=4)
-
+		print('classes-to-labels mapping saved')
 
 	return mapping
 
+
 def lab2class(marking, path=None):
-	mapping = {y:x for x,y in class2lab(marking)}
+	mapping = {y:x for (x,y) in class2lab(marking).iteritems()}
 
 	if path != None:
 		with open(path, 'w') as f:
@@ -72,42 +59,83 @@ def lab2class(marking, path=None):
 
 	return mapping
 	
+
+def flat_marking(marking): #marking without separating entries by class id
+	new_marking = {}
+
+	for phase in marking:
+		for class_id in marking[phase]:
+			new_marking.setdefault(phase, []).extend(marking[phase][class_id])
+
+	return new_marking
 
 
 def sign2id(marking, path=None):
+	print('')
+	marking = flat_marking(marking)
 	mapping = {}
-	for phase in sorted(marking):
-		sorted_by_pict = sorted(marking[phase], key=lamda x: x['pict_name'])
+
+	for phase in marking:
+		sorted_by_pict = sorted(marking[phase], key=lambda x: x['pict_name'])
+
 		for i, sign in enumerate(sorted_by_pict):
 			name = "{}.png".format(str(i).zfill(6))
-			mapping[phase][name] = sign
+			mapping.setdefault(phase, {})[name] = sign
 
 		if path != None:
 			with open(path.format(phase), 'w') as f:
 				json.dump(mapping, f, indent=4)
+			print('sign-to-id mapping for {} saved'.format(phase))
 
 	return mapping
 
 
-def crop_and_save(sign_mapping, input_path, output_path, class_mapping):
-	for phase in sorted(sign_mapping):
+
+
+
+def crop_and_save(sign_mapping, class_mapping, input_path='', output_path=''):
+	rate = 100
+	for phase in sign_mapping:
+		gt = []
+		count = 0
+		print('\ncropping signs: {}'.format(phase))
 		for sign_name in sorted(sign_mapping[phase]):
+			if count % rate == 0:
+				print(sign_name)
+			count += 1
+				
 			sign_entry = sign_mapping[phase][sign_name]
 			cropped = crop_sign(input_path, sign_entry)
 
-			label = class_mapping[sign_entry['class_id']]
+			label = class_mapping[sign_entry['sign_class']]
+			directory = '{output_path}/{phase}/{label}'.format(**locals())
+			safe_mkdir(directory)
+			full_path = '{directory}/{sign_name}'.format(**locals())
+			cv2.imwrite(full_path, cropped)
+
 			short_path = '{label}/{sign_name}'.format(**locals())
-			long_path = '{output_path}/{short_path}'.format(**locals())
+			gt += [(short_path, label)]
+		save_gt(gt, output_path, phase)
 
 
 
-def process(img_path, marking_path, prefix, cropped_path):
-	marking = get_marking(marking_path, prefix)
-	class2lab_mapping = class2lab(marking['train'], cropped_path + '/classes2labels.json')
-	lab2class_mapping = lab2class(marking['train'], cropped_path + '/labels2classes.json')
-	sign_mapping = sign2id(marking, cropped_path + '/id2sign_{}.json') #note: {} is for phase insertion (see sign2id definition)
+def marking2cropped(marking=None, img_path='', cropped_path=''):
+	print('\nmarking -> cropped')
+	class2lab_mapping = class2lab(marking['train'], cropped_path + '/classes-to-labels.json')
+	lab2class_mapping = lab2class(marking['train'], cropped_path + '/labels-to-classes.json')
+	sign_mapping = sign2id(marking, cropped_path + '/id-to-sign_{}.json') #note: {} is for phase insertion (see sign2id definition)
 
-	crop_and_save(sign_mapping, class_mapping, input_path, output_path)
+	crop_and_save(sign_mapping, class2lab_mapping, input_path=img_path, output_path=cropped_path)
+
+
+
+# def process_imgs(img_path, marking_path, prefix, cropped_path):
+# 	marking = get_marking(marking_path, prefix)
+# 	class2lab_mapping = class2lab(marking['train'], cropped_path + '/classes2labels.json')
+# 	lab2class_mapping = lab2class(marking['train'], cropped_path + '/labels2classes.json')
+# 	sign_mapping = sign2id(marking, cropped_path + '/id2sign_{}.json') #note: {} is for phase insertion (see sign2id definition)
+
+# 	crop_and_save(sign_mapping, class_mapping, input_path, output_path)
 
 
 
