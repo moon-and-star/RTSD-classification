@@ -3,6 +3,7 @@ import json
 import random
 from util.util import safe_mkdir, removekey
 from pprint import pprint
+import os.path as osp
 
 
 def remove_ignored(signs):
@@ -31,6 +32,20 @@ def load_marking(filename):
         signs = json.load(f)
     print("Marking is loaded.")
     return signs
+    
+
+def load_classification_marking(marking_path, prefix):
+    marking = {}
+
+    for phase in ['train', 'test', 'val']:
+        path = '{}/{}_{}.json'.format(marking_path, prefix, phase)
+        if osp.exists(path):
+            marking[phase] = load_marking(path)
+        else:
+            marking[phase] = None
+            print("WARNING: no {} marking file found.".format(phase))
+    
+    return marking
 
          
 def get_classification_labels(classes):
@@ -167,7 +182,7 @@ def save_marking(marking, path, prefix):
     for phase in sorted(marking):
         filename = "{}/{}_{}.json".format(path, prefix, phase)
         with open(filename, 'w') as f:
-            content = json.dumps(marking[phase], indent=2, sort_keys=True)
+            content = json.dumps(marking[phase], indent=4, sort_keys=True)
             f.write(content)
 
 
