@@ -54,8 +54,6 @@ def getInitialConfig():
 
 
 
-# def getConfName():
-# 	return "config.json"
 
 def getConfig(path):
 	with open(path) as f:
@@ -72,6 +70,8 @@ def initConfig(path):
 	print("\nConfiguration file path: {}\n".format(path) )
 	pprint(getConfig(path))
 
+	return config
+
 if __name__ == '__main__':
 	initConfig()
-	pass
+
