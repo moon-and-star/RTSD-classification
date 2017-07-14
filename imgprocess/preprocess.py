@@ -105,8 +105,6 @@ def process(rootpath, outpath, phase, size=32, pad=4, border='replicate'):
         clid = int(clid)
         if total % rate == 0:
             print(image_name)
-        if total == 100:
-            break
 
         #read and trasform
         img = cv2.imread("{}/{}/{}".format(rootpath,phase,image_name))
