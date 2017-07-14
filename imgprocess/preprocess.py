@@ -93,7 +93,7 @@ def saveImgInfo(outpath, phase, mean, total, new_gt, mapping):
 
 
 
-rate = 1
+rate = 100
 def process(rootpath, outpath, phase, size=32, pad=4, border='replicate'):
     #preparations
     with  open('{}/gt_{}.txt'.format(rootpath, phase)) as f: # open file to read labels (and, may be coords)
@@ -101,7 +101,7 @@ def process(rootpath, outpath, phase, size=32, pad=4, border='replicate'):
     mean = np.zeros((3, size + pad * 2, size + pad * 2), dtype=np.float32)
     total = 0; total = 0; new_gt = []; mapping = {}
 
-    for image_name, clid in [x.replace('\r\n', '').split(',') for x in markup[1:]]:
+    for image_name, clid in sorted([x.replace('\r\n', '').split(',') for x in markup]):
         clid = int(clid)
         if total % rate == 0:
             print(image_name)
@@ -119,7 +119,7 @@ def process(rootpath, outpath, phase, size=32, pad=4, border='replicate'):
         cv2.imwrite("{}/{}/{}/{}.png".format(outpath, phase, clid, total), transformed)
 
         #update
-        new_name = "{}/{}.png".format(clid, total)
+        new_name = "{}/{}.png".format(clid, str(total).zfill(6))
         mapping[new_name] = image_name
         new_gt += ["{} {}".format(new_name, clid)]
         total = total + 1
