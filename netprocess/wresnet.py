@@ -3,6 +3,12 @@
 import sys
 sys.path.append('/opt/caffe/python/')
 
+import pathlib
+local_path = pathlib.Path('../')
+absolute_path = local_path.resolve()
+sys.path.append(absolute_path)
+
+
 from util.util import safe_mkdir, load_image_mean
 # from gen_solver import GenSingleNetSolver
 
