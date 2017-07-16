@@ -6,7 +6,7 @@ sys.path.append('/opt/caffe/python/')
 import pathlib2 as pathlib
 local_path = pathlib.Path('../')
 absolute_path = local_path.resolve()
-sys.path.append(absolute_path)
+sys.path.append(str(absolute_path))
 
 
 from util.util import safe_mkdir, load_image_mean
