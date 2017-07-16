@@ -3,7 +3,7 @@
 import sys
 sys.path.append('/opt/caffe/python/')
 
-import pathlib
+import pathlib2 as pathlib
 local_path = pathlib.Path('../')
 absolute_path = local_path.resolve()
 sys.path.append(absolute_path)
