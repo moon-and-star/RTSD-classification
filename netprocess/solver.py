@@ -133,10 +133,11 @@ class SolverParameters(object):
         content = ''
 
         for arg in sorted(kwargs):
-            if type(kwargs[arg]) == str:
-                content += '{}: "{}"\n'.format(arg, kwargs[arg])
-            else:
+            if type(kwargs[arg]) in [int, float]:
                 content += '{}: {}\n'.format(arg, kwargs[arg])
+            else:
+                content += '{}: "{}"\n'.format(arg, kwargs[arg])
+
 
         self.content = content
 
