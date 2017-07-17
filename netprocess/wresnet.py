@@ -66,7 +66,7 @@ def convolution(bottom, **kwargs):
         stride=kwargs['stride'],
         num_output=kwargs['num_output'],
         pad=kwargs['pad'],
-        # group=kwargs['group'],
+        group=kwargs['group'],
         weight_filler = dict(type = 'xavier'),
         convolution_param = dict(engine=1), #1 means CAFFE
         name = kwargs['name'])    
