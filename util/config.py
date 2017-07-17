@@ -43,10 +43,10 @@ def getInitialConfig():
 	tp['test_frequency'] = 1 #
 	tp['lr_step'] = 80 #
 	tp['snap_epoch'] = 80
+	tp['gpu_num'] = 0
 	config['train_params'] = tp
 
 	sp = {}
-	sp['gpu_num'] = 0
 	sp['base_lr'] = 0.1
 	sp['type'] = 'sgd'
 	sp['momentum'] = 0.9
