@@ -30,20 +30,23 @@ def getInitialConfig():
 	config['curr_exp'] = exp
 	config['exp_list'] = [[0]] #group 0 contains only 1 experiment - 0 
 
+
 	wrn = {}
-	wrn['width'] = 1
-	wrn['metablock_depth'] = 1 #number of blocks in one block of blocks (watch article)
+	wrn['width'] = 2
+	wrn['metablock_depth'] = 2 #number of blocks in one block of blocks (watch article)
 	config['wide_resnet'] = wrn
 
+
 	tp = {}
-	tp['gpu_num'] = 0
-	tp['batch_size'] = 128
-	tp['epoch_num'] = 400
-	tp['test_frequency'] = 1 
-	tp['lr_step'] = 80
+	tp['batch_size'] = 128 #
+	tp['epoch_num'] = 400 #
+	tp['test_frequency'] = 1 #
+	tp['lr_step'] = 80 #
+	tp['snap_epoch'] = 80
 	config['train_params'] = tp
 
 	sp = {}
+	sp['gpu_num'] = 0
 	sp['base_lr'] = 0.1
 	sp['type'] = 'sgd'
 	sp['momentum'] = 0.9
@@ -51,7 +54,9 @@ def getInitialConfig():
 	sp['lr_policy'] = 'step'
 	sp['gamma'] = 0.2
 	sp['solver_mode'] = 'GPU' 
-	config['solver_params'] = sp
+	config['solver_exact'] = sp
+
+
 
 	return config
 	
@@ -77,5 +82,5 @@ def initConfig(path):
 	return config
 
 if __name__ == '__main__':
-	initConfig()
+	initConfig('./config.json')
 
