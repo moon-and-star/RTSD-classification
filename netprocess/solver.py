@@ -152,8 +152,8 @@ def gen_solver(config):
     kwargs = solver_args(config)
     p = SolverParameters(**kwargs)  
     
-    # path = solver_path(config)
-    path = './solver.txt'
+    path = solver_path(config)
+    # path = './solver.txt'
     with open(path, 'w') as f:
         f.write(p.content) 
         print(p.content)
