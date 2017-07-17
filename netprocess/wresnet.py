@@ -80,8 +80,8 @@ def bn_relu_conv(bottom, **kwargs):
     # relu = L.ReLU(bn)
     # conv = convolution(relu, **kwargs)
 
-    relu = L.ReLU(bottom)
-    conv = convolution(relu, **kwargs)
+    # relu = L.ReLU(bottom)
+    conv = convolution(bottom, **kwargs)
 
     return conv
 
