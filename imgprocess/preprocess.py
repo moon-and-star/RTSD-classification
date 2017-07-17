@@ -114,7 +114,7 @@ def process(rootpath, outpath, phase, size=32, pad=4, border='replicate'):
 
         #save transformed
         safe_mkdir("{}/{}/{}".format(outpath, phase, clid))
-        cv2.imwrite("{}/{}/{}/{}.png".format(outpath, phase, clid, total), transformed)
+        cv2.imwrite("{}/{}/{}/{}.png".format(outpath, phase, clid, str(total).zfill(6)), transformed)
 
         #update
         new_name = "{}/{}.png".format(clid, str(total).zfill(6))
