@@ -133,7 +133,7 @@ class SolverParameters(object):
         content = ''
 
         for arg in sorted(kwargs):
-            if type(kwargs[arg]) in [int, float]:
+            if type(kwargs[arg]) in [int, float] or arg == 'solver_mode':
                 content += '{}: {}\n'.format(arg, kwargs[arg])
             else:
                 content += '{}: "{}"\n'.format(arg, kwargs[arg])
