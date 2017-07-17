@@ -48,7 +48,7 @@ def getInitialConfig():
 
 	sp = {}
 	sp['base_lr'] = 0.1
-	sp['type'] = 'sgd'
+	sp['type'] = 'SGD'
 	sp['momentum'] = 0.9
 	sp['weight_decay'] = 0.0005
 	sp['lr_policy'] = 'step'
