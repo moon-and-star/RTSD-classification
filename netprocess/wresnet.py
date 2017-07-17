@@ -372,8 +372,12 @@ def launch():
 def construct(config):
     for phase in ['train', 'val', 'test']:
         wrn = wresnet(config, phase)
-        with open("./{}.prototxt".format(phase), 'w') as out:
+        path = proto_path(config, phase)
+
+        with open(path, 'w') as out:
             out.write(str(wrn))
+
+    gen_solver(config)
 
 
 
