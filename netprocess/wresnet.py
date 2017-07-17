@@ -80,8 +80,8 @@ def bn_relu_conv(bottom, **kwargs):
     # relu = L.ReLU(bn)
     # conv = convolution(relu, **kwargs)
 
-    bn = L.BatchNorm(bottom, use_global_stats=True)
-    conv = convolution(bn, **kwargs)
+    relu = L.ReLU(bottom)
+    conv = convolution(relu, **kwargs)
 
     return conv
 
