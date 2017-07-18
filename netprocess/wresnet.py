@@ -47,7 +47,8 @@ def append_data(net, phase, **kwargs):
         batch_size = batch_size,
         new_height = img_size + 2 * pad,
         new_width = img_size + 2 * pad,
-        shuffle=True)
+        shuffle=True,
+        root_folder=img_path)
 
     PHASE = get_caffe_phase(phase)
     net['data'], net['label'] = L.ImageData(
@@ -227,6 +228,7 @@ def data_args(config):
     args['img_size'] = config['img']['img_size']
     args['pad'] = config['img']['padding']
     args['batch_size'] = config['train_params']['batch_size']
+    # args['root_folder'] = config[]
 
     return args
 
