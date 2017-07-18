@@ -184,7 +184,7 @@ def dropout(name, bottom, dropout_ratio):
 
 
 def append_softmax(net, bottom):
-    activ = L.Softmax(bottom, in_place=False)
+    activ = L.Softmax(bottom, in_place=False, engine=1)
     setattr(net, 'softmax', activ)
     return activ    
 
