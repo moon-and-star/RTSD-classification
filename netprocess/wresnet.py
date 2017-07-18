@@ -41,8 +41,8 @@ def append_data(net, phase, **kwargs):
 
     mean_path = '{img_path}/{phase}/mean.txt'.format(**locals())
     mean = load_image_mean(mean_path)
-    root = "{img_path}/{phase}".format(**locals())
-    
+    root = "{img_path}/{phase}/".format(**locals())
+
     image_data_param = dict(
         source = '{img_path}/gt_{phase}.txt'.format(**locals()), 
         batch_size = batch_size,
