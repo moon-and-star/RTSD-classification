@@ -12,7 +12,7 @@ def getInitialConfig():
 	im['marking_path'] = '../global_data/Traffic_signs/RTSD'
 	im['classmark_prefix'] = 'classmarking'
 	im['cropped_path'] = '../global_data/Traffic_signs/RTSD/classification'
-	im['processed_path'] = './local_data/RTSD/'
+	im['processed_path'] = './local_data/RTSD'
 	im['img_size'] = 32
 	im['padding'] = 4
 	im['border'] = 'replicate' # black, grey; replicate

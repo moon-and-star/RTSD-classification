@@ -41,14 +41,15 @@ def append_data(net, phase, **kwargs):
 
     mean_path = '{img_path}/{phase}/mean.txt'.format(**locals())
     mean = load_image_mean(mean_path)
-
+    root = "{img_path}/{phase}".format(**locals())
+    
     image_data_param = dict(
         source = '{img_path}/gt_{phase}.txt'.format(**locals()), 
         batch_size = batch_size,
         new_height = img_size + 2 * pad,
         new_width = img_size + 2 * pad,
         shuffle=True,
-        root_folder=img_path)
+        root_folder=root)
 
     PHASE = get_caffe_phase(phase)
     net['data'], net['label'] = L.ImageData(
@@ -256,7 +257,7 @@ def conv2_args(config):
     args['depth'] = config['wide_resnet']['metablock_depth']
     width = config['wide_resnet']['width'] 
     args['num_output'] = width * 16
-    
+
     if width > 1:
         args['downsample'] = True  
         args['downsampling_stride'] = 1 
