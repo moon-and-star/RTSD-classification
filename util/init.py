@@ -2,6 +2,7 @@
 
 from config import initConfig
 import sys
+from util import safe_mkdir
 
 
 

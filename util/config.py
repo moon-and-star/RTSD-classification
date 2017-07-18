@@ -12,7 +12,7 @@ def getInitialConfig():
 	im['marking_path'] = '../global_data/Traffic_signs/RTSD'
 	im['classmark_prefix'] = 'classmarking'
 	im['cropped_path'] = '../global_data/Traffic_signs/RTSD/classification'
-	im['processed_path'] = './local_data/RTSD'
+	im['processed_path'] = './local_data/RTSD/'
 	im['img_size'] = 32
 	im['padding'] = 4
 	im['border'] = 'replicate' # black, grey; replicate
@@ -53,7 +53,7 @@ def getInitialConfig():
 	sp['weight_decay'] = 0.0005
 	sp['lr_policy'] = 'step'
 	sp['gamma'] = 0.2
-	sp['solver_mode'] = 'GPU' 
+	sp['solver_mode'] = 'CPU' 
 	config['solver_exact'] = sp
 
 
