@@ -336,17 +336,18 @@ def wresnet(config, phase):
     net = caffe.NetSpec()
 
     data, label = append_data(net, phase, **data_args(config))
-    conv1 = append_conv(net, data, **conv1_args(config))
-    conv2 = append_conv_block(net, conv1, **conv2_args(config))
-    conv3 = append_conv_block(net, conv2, **conv3_args(config))
-    conv4 = append_conv_block(net, conv3, **conv4_args(config))
-    pool = append_pool(net, conv4, **avgpool_args())
+    # conv1 = append_conv(net, data, **conv1_args(config))
+    # conv2 = append_conv_block(net, conv1, **conv2_args(config))
+    # conv3 = append_conv_block(net, conv2, **conv3_args(config))
+    # conv4 = append_conv_block(net, conv3, **conv4_args(config))
+    # pool = append_pool(net, conv4, **avgpool_args())
 
     
-    fc = append_fc(net, pool, **fc_args(config))
-    softmax = append_softmax(net, fc)
-    loss = append_loss(net, softmax, label, phase)
-    net.scale = L.Scale(label, scale_param=dict(filler=dict(value=1)))
+    # fc = append_fc(net, pool, **fc_args(config))
+    # softmax = append_softmax(net, fc)
+    # loss = append_loss(net, softmax, label, phase)
+    
+    # net.scale = L.Scale(label, scale_param=dict(filler=dict(value=1)))
 
     return net.to_proto()
 
