@@ -346,6 +346,7 @@ def wresnet(config, phase):
     fc = append_fc(net, pool, **fc_args(config))
     softmax = append_softmax(net, fc)
     loss = append_loss(net, softmax, label, phase)
+    net.scale = L.Scale(label, scale_param={filler: {value: 1}})
 
     return net.to_proto()
 
