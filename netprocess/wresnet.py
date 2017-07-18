@@ -122,7 +122,7 @@ def shortcut_layer(bottom, **kwargs):
         kwargs['pad'] = 0
         kwargs['name'] = kwargs['name'] + '_shortcut'
         return convolution(bottom, **kwargs)
-    elif bottom.num_output != kwargs['num_output']:
+    elif bottom['num_output'] != kwargs['num_output']:
         kwargs['kernel_size'] = 1
         kwargs['pad'] = 0
         kwargs['name'] = kwargs['name'] + '_shortcut'
