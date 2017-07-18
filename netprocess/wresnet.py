@@ -51,7 +51,7 @@ def append_data(net, phase, **kwargs):
     PHASE = get_caffe_phase(phase)
     net['data'], net['label'] = L.ImageData(
         image_data_param = image_data_param,
-        # transform_param = get_transform_param(mean, img_size),
+        transform_param = get_transform_param(mean, img_size),
         ntop = 2,
         include = dict(phase = caffe_pb2.Phase.Value(PHASE)),
         name = "data")
@@ -77,8 +77,10 @@ def bn_relu_conv(bottom, **kwargs):
     # bn = L.BatchNorm(bottom, use_global_stats=True, in_place=True)
     # relu = L.ReLU(bn, in_place = True, engine=1)
 
-    bn = L.BatchNorm(bottom, use_global_stats=True)
-    relu = L.ReLU(bn, engine=1)
+    # bn = L.BatchNorm(bottom, use_global_stats=True)
+    # relu = L.ReLU(bn, engine=1)
+
+    relu = L.ReLU(bottom, engine=1)
 
     conv = convolution(relu, **kwargs)
 
