@@ -51,7 +51,7 @@ def append_data(net, phase, **kwargs):
     PHASE = get_caffe_phase(phase)
     net['data'], net['label'] = L.ImageData(
         image_data_param = image_data_param,
-        transform_param = get_transform_param(mean, img_size),
+        # transform_param = get_transform_param(mean, img_size),
         ntop = 2,
         include = dict(phase = caffe_pb2.Phase.Value(PHASE)),
         name = "data")
