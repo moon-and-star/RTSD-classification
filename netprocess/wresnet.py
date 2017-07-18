@@ -336,7 +336,7 @@ def wresnet(config, phase):
     net = caffe.NetSpec()
 
     data, label = append_data(net, phase, **data_args(config))
-    n.silence = L.Silence(data, ntop=0)
+    net.silence = L.Silence(data, ntop=0)
     # conv1 = append_conv(net, data, **conv1_args(config))
     # conv2 = append_conv_block(net, conv1, **conv2_args(config))
     # conv3 = append_conv_block(net, conv2, **conv3_args(config))
