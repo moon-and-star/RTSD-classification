@@ -255,7 +255,8 @@ def conv2_args(config):
 
     args['depth'] = config['wide_resnet']['metablock_depth']
     width = config['wide_resnet']['width'] 
-    args['num_output'] = width * 16:
+    args['num_output'] = width * 16
+    
     if width > 1:
         args['downsample'] = True  
         args['downsampling_stride'] = 1 
