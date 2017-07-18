@@ -122,11 +122,6 @@ def shortcut_layer(bottom, **kwargs):
         kwargs['pad'] = 0
         kwargs['name'] = kwargs['name'] + '_shortcut'
         return convolution(bottom, **kwargs)
-    elif bottom['num_output'] != kwargs['num_output']:
-        kwargs['kernel_size'] = 1
-        kwargs['pad'] = 0
-        kwargs['name'] = kwargs['name'] + '_shortcut'
-        return convolution(bottom, **kwargs)
     else:
         return bottom
 
@@ -251,7 +246,7 @@ def conv1_args(config=None):
 
 def conv2_args(config):
     args = {}
-   
+
     args['name'] = 'conv2'
     args['kernel_size'] = 3
     args['stride'] = 1
@@ -259,8 +254,13 @@ def conv2_args(config):
     args['group'] = 1
 
     args['depth'] = config['wide_resnet']['metablock_depth']
-    args['num_output'] = config['wide_resnet']['width'] * 16
-    args['downsample'] = False 
+    width = config['wide_resnet']['width'] 
+    args['num_output'] = width * 16:
+    if width > 1:
+        args['downsample'] = True  
+        args['downsampling_stride'] = 1 
+    else:
+        args['downsample'] = False 
 
     return args
 
@@ -346,37 +346,6 @@ def wresnet(config, phase):
     loss = append_loss(net, softmax, label, phase)
 
     return net.to_proto()
-
-
-
-
-
-
-
-
- 
-def launch():
-    parser = gen_parser()
-    args = parser.parse_args()
-    dataset = 'RTSD'
-    for phase in ['train', 'test']:
-        print("Generating architectures")
-        print("{}  {}  {}".format(dataset,mode, phase))
-        directory = '{}/experiment_{}/{}/{}/trial_{}/'.format(
-            args.proto_pref,args.EXPERIMENT_NUMBER, dataset,mode, args.trial_number)
-        safe_mkdir(directory)
-        with open('{}/{}.prototxt'.format(directory, phase), 'w') as f:
-            f.write(str(make_net(
-                            args=args,
-                            dataset=dataset,
-                            mode=mode,
-                            phase=phase
-            )))
-
-        print("")
-    GenSingleNetSolver(dataset, mode, args)
-
-
 
 
 
