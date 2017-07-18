@@ -46,7 +46,8 @@ def append_data(net, phase, **kwargs):
         source = '{img_path}/gt_{phase}.txt'.format(**locals()), 
         batch_size = batch_size,
         new_height = img_size + 2 * pad,
-        new_width = img_size + 2 * pad)
+        new_width = img_size + 2 * pad,
+        shuffle=True)
 
     PHASE = get_caffe_phase(phase)
     net['data'], net['label'] = L.ImageData(
