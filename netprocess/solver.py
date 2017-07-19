@@ -1,5 +1,11 @@
 #!/usr/bin/env python
+import sys
+import pathlib2 as pathlib
+local_path = pathlib.Path('./')
+absolute_path = local_path.resolve()
+sys.path.append(str(absolute_path))
 
+from util.util import safe_mkdir
 from math import ceil
 
 
@@ -91,7 +97,9 @@ def append_optimizer(args, config):
 
 def snapshot_path(config):
     exp_dir = experiment_directory(config)
-    return '{exp_dir}/snapshots/snap'.format(**locals())
+    snap_path = '{exp_dir}/snapshots'.format(**locals())
+    safe_mkdir(snap_path)
+    return '{snap_path}/snap'.format(**locals())
 
 
 def snapshot_iters(config):
