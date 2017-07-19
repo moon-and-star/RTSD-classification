@@ -91,7 +91,7 @@ def append_optimizer(args, config):
 
 def snapshot_path(config):
     exp_dir = experiment_directory(config)
-    return '{exp_dir}/snapshots'.format(**locals())
+    return '{exp_dir}/snapshots/snap'.format(**locals())
 
 
 def snapshot_iters(config):
