@@ -202,13 +202,6 @@ def accuracy(name, bottom, labels, top_k):
         name = name
     )
 
-# def append_loss(net, bottom, label, phase):
-#     n.loss = L.MultinomialLogisticLoss(bottom, label)
-#     n.accuracy_1 = accuracy("accuracy_1", bottom, label, 1)
-#     n.accuracy_5 = accuracy("accuracy_5", bottom, label, 5)
-
-#     if phase == "train":
-#         n.silence = L.Silence(n.accuracy_1, n.accuracy_5, ntop=0)
 
 
 def append_loss(net, bottom, label, phase):
@@ -331,6 +324,14 @@ def fc_args(config):
     return args
 
 
+def append_tail(net, bottom, label, phase):
+    if phase == 'train':
+        net.loss = L.SoftmaxWithLoss(bottom, label)
+    else:
+        softmax = append_softmax(net, bottom)
+        loss = append_loss(net, softmax, label, phase)
+
+
 
 def wresnet(config, phase):
     net = caffe.NetSpec()
@@ -345,9 +346,8 @@ def wresnet(config, phase):
 
     
     fc = append_fc(net, pool, **fc_args(config))
-    softmax = append_softmax(net, fc)
-    loss = append_loss(net, softmax, label, phase)
-
+    append_tail(net, fc, label, phase)
+    
     # net.scale = L.Scale(label, scale_param=dict(filler=dict(value=1)))
 
     return net.to_proto()
