@@ -160,7 +160,7 @@ def bn_relu_avepool(bottom, **kwargs ):
     # bn = L.BatchNorm(bottom, use_global_stats=True, in_place=True)
     # relu = L.ReLU(bn, in_place = True)
     bn = L.BatchNorm(bottom, use_global_stats=True)
-    relu = L.ReLU(bn, engine=1)
+    relu = L.ReLU(bn, engine=1, in_place=True)
     return L.Pooling(relu, **kwargs)
 
 
@@ -326,7 +326,7 @@ def fc_args(config):
 
 def append_tail(net, bottom, label, phase):
     if phase == 'train':
-        net.loss = L.SoftmaxWithLoss(bottom, label)
+        net.loss = L.SoftmaxWithLoss(bottom, label, in_place=True)
     else:
         softmax = append_softmax(net, bottom)
         loss = append_loss(net, softmax, label, phase)
