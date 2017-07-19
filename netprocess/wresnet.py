@@ -77,7 +77,7 @@ def convolution(bottom, **kwargs):
 
 
 def bn_relu_conv(bottom, **kwargs):
-    bn = L.BatchNorm(bottom, use_global_stats=False, in_place=True)
+    bn = L.BatchNorm(bottom, use_global_stats=False)
     relu = L.ReLU(bn, in_place=kwargs['in_place'], engine=1)
     conv = convolution(relu, **kwargs)
 
@@ -200,7 +200,7 @@ def append_loss(net, bottom, label, phase):
     
     if phase != "train":
         net.accuracy_1 = accuracy("accuracy_1", bottom, label, 1)
-        # net.accuracy_5 = accuracy("accuracy_5", bottom, label, 5)
+        net.accuracy_5 = accuracy("accuracy_5", bottom, label, 5)
 
     return net.loss
 
@@ -325,8 +325,6 @@ def append_tail(net, bottom, label, phase):
     else:
         softmax = append_softmax(net, bottom)
         loss = append_loss(net, softmax, label, phase)
-    # softmax = append_softmax(net, bottom)
-    # loss = append_loss(net, softmax, label, phase)
 
 
 
