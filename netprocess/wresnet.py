@@ -339,14 +339,14 @@ def wresnet(config, phase):
     conv1 = append_conv(net, data, **conv1_args(config))
     conv2 = append_conv_block(net, conv1, **conv2_args(config))
     conv3 = append_conv_block(net, conv2, **conv3_args(config))
-    # conv4 = append_conv_block(net, conv3, **conv4_args(config))
+    conv4 = append_conv_block(net, conv3, **conv4_args(config))
     # pool = append_pool(net, conv4, **avgpool_args())
 
     
     # fc = append_fc(net, pool, **fc_args(config))
     # append_tail(net, fc, label, phase)
     
-    fc = append_fc(net, conv3, **fc_args(config))
+    fc = append_fc(net, conv4, **fc_args(config))
     append_tail(net, fc, label, phase)
     return net.to_proto()
 
