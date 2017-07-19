@@ -233,7 +233,7 @@ def conv1_args(config=None):
 def conv2_args(config):
     args = {}
 
-    args['in_place'] = False
+    args['in_place'] = True
     args['name'] = 'conv2'
     args['kernel_size'] = 3
     args['stride'] = 1
@@ -256,7 +256,7 @@ def conv2_args(config):
 def conv3_args(config):
     args = {}
     
-    args['in_place'] = False
+    args['in_place'] = True
     args['name'] = 'conv3'
     args['kernel_size'] = 3
     args['stride'] = 1
@@ -274,7 +274,7 @@ def conv3_args(config):
 def conv4_args(config):
     args = {}
     
-    args['in_place'] = False
+    args['in_place'] = True
     args['name'] = 'conv4'
     args['kernel_size'] = 3
     args['stride'] = 1
