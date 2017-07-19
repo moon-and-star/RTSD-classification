@@ -203,7 +203,7 @@ def append_loss(net, bottom, label, phase):
     
     if phase != "train":
         net.accuracy_1 = accuracy("accuracy_1", bottom, label, 1)
-        net.accuracy_5 = accuracy("accuracy_5", bottom, label, 5)
+        # net.accuracy_5 = accuracy("accuracy_5", bottom, label, 5)
 
     return net.loss
 
