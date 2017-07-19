@@ -6,4 +6,4 @@ for phase in ['train', 'val', 'test']:
 
 	with open('./local_data/RTSD/gt_{}.txt'.format(phase), 'w') as f:
 		for line in lines[:1]:
-			f.write('./local_data/RTSD/{phase}/{line}'.format(**locals()))
+			f.write('{line}'.format(**locals()))
