@@ -77,7 +77,7 @@ def convolution(bottom, **kwargs):
 
 
 def bn_relu_conv(bottom, **kwargs):
-    bn = L.BatchNorm(bottom, use_global_stats=True)
+    bn = L.BatchNorm(bottom, use_global_stats=False)
     relu = L.ReLU(bn, in_place=kwargs['in_place'], engine=1)
     conv = convolution(relu, **kwargs)
 
