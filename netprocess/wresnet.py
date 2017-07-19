@@ -77,11 +77,11 @@ def convolution(bottom, **kwargs):
 
 
 def bn_relu_conv(bottom, **kwargs):
-    # bn = L.BatchNorm(bottom, use_global_stats=True, in_place=True)
-    # relu = L.ReLU(bn, in_place = True, engine=1)
+    bn = L.BatchNorm(bottom, use_global_stats=True, in_place=kwargs['in_place'])
+    relu = L.ReLU(bn, in_place=kwargs['in_place'], engine=1)
 
-    bn = L.BatchNorm(bottom, use_global_stats=True)
-    relu = L.ReLU(bn, engine=1)
+    # bn = L.BatchNorm(bottom, use_global_stats=True)
+    # relu = L.ReLU(bn, engine=1)
 
     # relu = L.ReLU(bottom, engine=1)
 
@@ -91,7 +91,7 @@ def bn_relu_conv(bottom, **kwargs):
 
 
 def append_conv(net, bottom, **kwargs):
-    # conv = convolution(bottom, **kwargs)
+    # kwargs['in_place'] = False
     conv = bn_relu_conv(bottom, **kwargs)
     setattr(net, kwargs['name'], conv)
     return conv
@@ -235,12 +235,14 @@ def conv1_args(config=None):
     args['stride'] = 1
     args['pad'] = 1
     args['group'] = 1
+    args['in_place'] = False
     return args
 
 
 def conv2_args(config):
     args = {}
 
+    args['in_place'] = True
     args['name'] = 'conv2'
     args['kernel_size'] = 3
     args['stride'] = 1
@@ -263,6 +265,7 @@ def conv2_args(config):
 def conv3_args(config):
     args = {}
     
+    args['in_place'] = True
     args['name'] = 'conv3'
     args['kernel_size'] = 3
     args['stride'] = 1
@@ -280,6 +283,7 @@ def conv3_args(config):
 def conv4_args(config):
     args = {}
     
+    args['in_place'] = True
     args['name'] = 'conv4'
     args['kernel_size'] = 3
     args['stride'] = 1
