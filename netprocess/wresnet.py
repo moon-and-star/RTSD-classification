@@ -322,13 +322,13 @@ def fc_args(config):
 
 
 def append_tail(net, bottom, label, phase):
-    # if phase == 'train':
-    #     net.loss = L.SoftmaxWithLoss(bottom, label)
-    # else:
-    #     softmax = append_softmax(net, bottom)
-    #     loss = append_loss(net, softmax, label, phase)
-    softmax = append_softmax(net, bottom)
-    loss = append_loss(net, softmax, label, phase)
+    if phase == 'train':
+        net.loss = L.SoftmaxWithLoss(bottom, label)
+    else:
+        softmax = append_softmax(net, bottom)
+        loss = append_loss(net, softmax, label, phase)
+    # softmax = append_softmax(net, bottom)
+    # loss = append_loss(net, softmax, label, phase)
 
 
 
