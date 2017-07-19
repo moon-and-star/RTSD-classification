@@ -226,7 +226,7 @@ def conv1_args(config=None):
     args['stride'] = 1
     args['pad'] = 1
     args['group'] = 1
-    args['in_place'] = False
+    args['in_place'] = True
     return args
 
 
