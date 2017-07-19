@@ -157,10 +157,10 @@ def append_conv_block(net, bottom, **kwargs):
 
 
 def bn_relu_avepool(bottom, **kwargs ):
-    # bn = L.BatchNorm(bottom, use_global_stats=True, in_place=True)
-    # relu = L.ReLU(bn, in_place = True)
-    bn = L.BatchNorm(bottom, use_global_stats=True)
-    relu = L.ReLU(bn, engine=1, in_place=True)
+    bn = L.BatchNorm(bottom, use_global_stats=True, in_place=True)
+    relu = L.ReLU(bn, in_place = True)
+    # bn = L.BatchNorm(bottom, use_global_stats=True)
+    # relu = L.ReLU(bn, engine=1, in_place=True)
     return L.Pooling(relu, **kwargs)
 
 
