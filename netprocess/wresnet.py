@@ -343,11 +343,11 @@ def wresnet(config, phase):
     pool = append_pool(net, conv4, **avgpool_args())
 
     
-    # fc = append_fc(net, pool, **fc_args(config))
-    # append_tail(net, fc, label, phase)
-    
     fc = append_fc(net, pool, **fc_args(config))
     append_tail(net, fc, label, phase)
+    
+    # fc = append_fc(net, pool, **fc_args(config))
+    # append_tail(net, fc, label, phase)
     return net.to_proto()
 
 
