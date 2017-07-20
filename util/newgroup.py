@@ -8,32 +8,45 @@ sys.path.append(str(absolute_path))
 
 
 from config import get_config, set_config
+from util import safe_mkdir
 from pprint import pprint
+import json
 
-# exp = {}
-# exp['exp_path'] = './Experiments'
-# exp['group'] = None
-# exp['group_description'] = ''
-# exp['exp_num'] = None
-# exp['exp_description'] = ''
-# config['curr_exp'] = exp
-# # config['exp_list'] = [[0]] #group 0 contains only 1 experiment - 0 
-# config['exp_list'] = []
+
+def update_config(args):
+    config = get_config(args.confpath)
+    config['exp']['exp_num'] = None
+    config['group_list'].append({'experiments': [], 'description': args.description})
+    config['exp']['group_description'] = args.description
+
+    if config['exp']['group'] == None:
+        config['exp']['group'] = 0
+    else:
+        config['exp']['group'] += 1
+    
+    set_config(args.confpath, config)
+   
+    
+def group_dir(config):
+    root = config['exp']['exp_path']
+    group = config['exp']['group']
+    return '{root}/group_{group}'.format(**locals())
+
+
+def update_dir(config):
+    path = group_dir(config)
+    safe_mkdir(path)
+
+    with open('{path}/group_description.txt'.format(**locals()), 'w') as f:
+        f.write(config['exp']['group_description'])
+
+
 
 def newgroup(args):
+    update_config(args)
     config = get_config(args.confpath)
-
-    if config['curr_exp']['group'] == None:
-        config['curr_exp']['group'] = 0
-    else:
-        config['curr_exp']['group'] += 1
-
-    group = {'experiments': [], 'description': args.description}
-    config['exp_list'].append(group)
-    config['curr_exp']['exp'] = None
-
-    print(config['exp_list'])
-    print('\n\n')
+    update_dir(config)
+   
     
 
 
