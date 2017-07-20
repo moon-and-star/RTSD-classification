@@ -16,8 +16,8 @@ def update_group_list(config):
     description = config['exp']['group_description']
 
     config['group_list'].append({
-        'description': description,
-        'num': config['exp']['group'],
+        'group_description': description,
+        'group_num': config['exp']['group'],
         'experiments': []})
 
 
