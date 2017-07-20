@@ -9,25 +9,6 @@ sys.path.append(str(absolute_path))
 
 from config import get_config, set_config
 from util import safe_mkdir
-# from pprint import pprint
-# import json
-
-
-def update_group_list(config):
-    group = config['exp']['group']
-    experiments = config['group_list'][group]['experiments']
-
-    description = config['exp']['exp_description']
-    experiments.append({
-        'exp_description': description,
-        'exp_num': config['exp']['exp_num']})
-   
-
-def update_exp_num(config):
-    group = config['exp']['group']
-    experiments = config['group_list'][group]['experiments']
-    config['exp']['exp_num'] = len(experiments)
-    
 
 
 
@@ -35,8 +16,10 @@ def update_config(args):
     config = get_config(args.confpath)
 
     config['exp']['exp_description'] = args.description
-    update_exp_num(config)
-    update_group_list(config)
+    group_num = config['exp']['group']
+    group = config['group_list'][group_num]
+    config['exp']['exp_num'] = group['exp_count']
+    group['exp_count'] += 1
 
     set_config(args.confpath, config)
    

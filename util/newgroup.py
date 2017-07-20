@@ -11,14 +11,14 @@ from config import get_config, set_config
 from util import safe_mkdir
 
 
-def update_group_list(config):
-    config['group_list']
-    description = config['exp']['group_description']
+# def update_group_list(config):
+#     config['group_list']
+#     description = config['exp']['group_description']
 
-    config['group_list'].append({
-        'group_description': description,
-        'group_num': config['exp']['group'],
-        'experiments': []})
+#     # config['group_list'].append({
+#     #     'group_description': description,
+#     #     'group_num': config['exp']['group'],
+#     #     'experiments': []})
 
 
 
@@ -29,7 +29,9 @@ def update_config(args):
     config['exp']['group_description'] = args.description
     config['exp']['exp_num'] = None 
     config['exp']['group'] = len(config['group_list'])
-    update_group_list(config)
+    config['group_list'].append({
+        'group_num': config['exp']['group'],
+        'exp_count': 0})
 
     set_config(args.confpath, config)
    
