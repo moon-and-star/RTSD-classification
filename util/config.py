@@ -54,7 +54,7 @@ def config_train(config):
 	sp['solver_mode'] = 'GPU' 
 	config['solver_exact'] = sp
 
-	
+
 
 
 
@@ -64,7 +64,6 @@ def initial_config():
 	config_img(config)
 	config_exp(config)
 	config_train(config)
-	
 
 	wrn = {}
 	wrn['width'] = 2
