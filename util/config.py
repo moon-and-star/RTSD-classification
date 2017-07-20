@@ -3,11 +3,9 @@
 import json
 from pprint import pprint
 
-def initial_config():
-	config = {}
-	config['randseed'] = 42
-
+def config_img(config):
 	im = {}
+
 	im['uncut_path'] = '../global_data/Traffic_signs/RTSD/imgs'
 	im['marking_path'] = '../global_data/Traffic_signs/RTSD'
 	im['classmark_prefix'] = 'classmarking'
@@ -19,25 +17,24 @@ def initial_config():
 	im['min_class_size'] = 300
 	im['test_ratio'] = 0.2
 	im['val_ratio'] = 0.1
+
 	config['img'] = im
 
+
+def config_exp(config):
 	exp = {}
+
 	exp['exp_path'] = './Experiments'
 	exp['group'] = None
 	exp['group_description'] = ''
 	exp['exp_num'] = None
 	exp['exp_description'] = ''
-	config['exp'] = exp
-	# config['exp_list'] = [[0]] #group 0 contains only 1 experiment - 0 
+
+	config['exp'] = exp 
 	config['group_list'] = []
+	
 
-
-	wrn = {}
-	wrn['width'] = 2
-	wrn['metablock_depth'] = 2 #number of blocks in one block of blocks (watch article)
-	config['wide_resnet'] = wrn
-
-
+def config_train(config):
 	tp = {}
 	tp['batch_size'] = 128 #
 	tp['epoch_num'] = 400 #
@@ -57,6 +54,22 @@ def initial_config():
 	sp['solver_mode'] = 'GPU' 
 	config['solver_exact'] = sp
 
+	
+
+
+
+def initial_config():
+	config = {}
+	config['randseed'] = 42
+	config_img(config)
+	config_exp(config)
+	config_train(config)
+	
+
+	wrn = {}
+	wrn['width'] = 2
+	wrn['metablock_depth'] = 2 #number of blocks in one block of blocks (watch article)
+	config['wide_resnet'] = wrn
 
 
 	return config
