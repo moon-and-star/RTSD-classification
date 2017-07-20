@@ -31,11 +31,11 @@ def epoch_size(config, phase):
 
 
 def experiment_directory(config):
-    group_num = config['curr_exp']['group']
+    group_num = config['exp']['group']
     group = "group_{group_num}".format(**locals())
 
-    exp_dir = config['curr_exp']['exp_path']
-    exp_num = config['curr_exp']['exp_num']
+    exp_dir = config['exp']['exp_path']
+    exp_num = config['exp']['exp_num']
     exp = 'exp_{exp_num}'.format(**locals())
     
     return "{exp_dir}/{group}/{exp}".format(**locals())

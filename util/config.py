@@ -27,9 +27,9 @@ def initial_config():
 	exp['group_description'] = ''
 	exp['exp_num'] = None
 	exp['exp_description'] = ''
-	config['curr_exp'] = exp
+	config['exp'] = exp
 	# config['exp_list'] = [[0]] #group 0 contains only 1 experiment - 0 
-	config['exp_list'] = []
+	config['group_list'] = []
 
 
 	wrn = {}
@@ -54,7 +54,7 @@ def initial_config():
 	sp['weight_decay'] = 0.0005
 	sp['lr_policy'] = 'step'
 	sp['gamma'] = 0.2
-	sp['solver_mode'] = 'CPU' 
+	sp['solver_mode'] = 'GPU' 
 	config['solver_exact'] = sp
 
 
@@ -67,7 +67,7 @@ def initial_config():
 def get_config(path):
 	with open(path) as f:
 		return json.load(f)
-		
+
 
 def set_config(path, config):
 	with open(path, 'w') as out:
@@ -79,9 +79,8 @@ def init_config(path):
 	set_config(path, config)
 
 	print('\nConfiguration file path: {}\n'.format(path) )
-	s = json.dumps(get_config(path), indent=4, sort_keys=True)
-	print(s)
-
+	print(json.dumps(get_config(path), indent=4, sort_keys=True))
+	
 	return config
 
 
