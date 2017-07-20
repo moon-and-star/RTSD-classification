@@ -166,11 +166,11 @@ def gen_solver(config):
 
 
 
-from util.config import getConfig
+from util.config import get_config
 from pprint import pprint
 
 if __name__ == '__main__':
-    config = getConfig('./config.json')
+    config = get_config('./config.json')
     gen_solver(config)
 
 

@@ -347,7 +347,7 @@ def wresnet(config, phase):
 
 
 
-def construct(config):
+def gen_wresnet(config):
     for phase in ['train', 'val', 'test']:
         wrn = wresnet(config, phase)
         path = proto_path(config, phase)
@@ -360,9 +360,9 @@ def construct(config):
 
 
 
-from util.config import getConfig
+from util.config import get_config
 from pprint import pprint
 
 if __name__ == '__main__':
-    config = getConfig('./config.json')
-    construct(config)
+    config = get_config('./config.json')
+    gen_wresnet(config)

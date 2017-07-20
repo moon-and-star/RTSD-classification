@@ -64,10 +64,10 @@ def initial_config():
 
 
 
-
 def get_config(path):
 	with open(path) as f:
 		return json.load(f)
+		
 
 def set_config(path, config):
 	with open(path, 'w') as out:
@@ -76,12 +76,15 @@ def set_config(path, config):
 
 def init_config(path):
 	config = initial_config()
-	set_config(path, config) 
+	set_config(path, config)
+
 	print('\nConfiguration file path: {}\n'.format(path) )
-	pprint(get_config(path))
+	s = json.dumps(get_config(path), indent=4, sort_keys=True)
+	print(s)
 
 	return config
 
+
+
 if __name__ == '__main__':
 	initConfig('./config.json')
-

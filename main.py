@@ -2,7 +2,6 @@
 
 
 import sys
-
 import pathlib2 as pathlib
 local_path = pathlib.Path('./')
 absolute_path = local_path.resolve()
