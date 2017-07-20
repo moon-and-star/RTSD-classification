@@ -3,7 +3,7 @@
 import json
 from pprint import pprint
 
-def getInitialConfig():
+def initial_config():
 	config = {}
 	config['randseed'] = 42
 
@@ -23,12 +23,13 @@ def getInitialConfig():
 
 	exp = {}
 	exp['exp_path'] = './Experiments'
-	exp['group'] = 0
+	exp['group'] = None
 	exp['group_description'] = ''
-	exp['exp_num'] = 0
+	exp['exp_num'] = None
 	exp['exp_description'] = ''
 	config['curr_exp'] = exp
-	config['exp_list'] = [[0]] #group 0 contains only 1 experiment - 0 
+	# config['exp_list'] = [[0]] #group 0 contains only 1 experiment - 0 
+	config['exp_list'] = []
 
 
 	wrn = {}
@@ -64,20 +65,20 @@ def getInitialConfig():
 
 
 
-def getConfig(path):
+def get_config(path):
 	with open(path) as f:
 		return json.load(f)
 
-def setConfig(path, config):
+def set_config(path, config):
 	with open(path, 'w') as out:
 		json.dump(config, out, sort_keys=True, indent=4) 
 	
 
-def initConfig(path):
-	config = getInitialConfig()
-	setConfig(path, config) 
+def init_config(path):
+	config = initial_config()
+	set_config(path, config) 
 	print('\nConfiguration file path: {}\n'.format(path) )
-	pprint(getConfig(path))
+	pprint(get_config(path))
 
 	return config
 

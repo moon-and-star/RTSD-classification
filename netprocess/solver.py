@@ -129,12 +129,6 @@ def solver_args(config):
     
 
 
- # def __init__(self, train_net=None,  max_iter=1000, test_net=None, test_interval=1,test_iter=1,
-    #              iter_size=1, type='sgd', lr_policy='step', base_lr=0.1, gamma=0.1, stepsize=100,
-    #              momentum=0.9, weight_decay=0.0005,, snapshot=100, snapshot_prefix="",
-    #              solver_mode="GPU", display=1 )    
-
-
 class SolverParameters(object):    
     def __init__(self, **kwargs):
         super(SolverParameters, self).__init__()

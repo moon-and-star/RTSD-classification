@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from config import initConfig
+from config import init_config
 import sys
 from util import safe_mkdir
 
@@ -23,7 +23,7 @@ def confirm():
 
 def init(args):
     confirm()
-    initConfig(args.confpath)
+    init_config(args.confpath)
     
 
 def setupInitParser(subparsers):
