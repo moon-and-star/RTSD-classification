@@ -9,8 +9,7 @@ sys.path.append(str(absolute_path))
 
 from config import get_config, set_config
 from util import safe_mkdir
-from pprint import pprint
-import json
+
 
 
 def update_config(args):
