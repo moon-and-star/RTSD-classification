@@ -50,12 +50,8 @@ def log_path(config):
     return "{directory}/{prefix}".format(**locals())
 
 
-def launch_training(args):
-    config = get_config(args.confpath)
-
-    # solver = './Experiments/group_0/exp_0/solver.prototxt'
+def launch_training(config):
     solver = solver_path(config)
-    # log = './Experiments/group_0/exp_0/training_log.txt'
     log = log_path(config)
     gpu_num = config['train_params']['gpu_num']
     tools = '/opt/caffe/.build_release/tools'
@@ -63,12 +59,21 @@ def launch_training(args):
      --solver={solver}  2>&1| tee {log}".format(**locals()))
 
 
+from util.config import set_config
+
+def copy_config(config):
+    root = experiment_directory(config)
+    path = '{root}/config.json'.format(**locals())
+    set_config(path, config)
 
 
 def train(args):
     check_experiment(args)
     netgen(args)
-    launch_training(args)
+
+    config = get_config(args.confpath)
+    copy_config(config)
+    launch_training(config)
     
 
 def setupTrainParser(subparsers):
