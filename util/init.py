@@ -7,14 +7,13 @@ from util import safe_mkdir
 
 
 def confirm():
-    print("Warning: this action will reset configuration to default values. List of experiments will be lost. \nAre you sure? (yes/no):")
     ans = sys.stdin.readline().replace('\n', '').lower()
     while not(ans in ['yes', 'no']):
         print('Please answer yes or no:')
         ans = sys.stdin.readline().replace('\n', '').lower()
 
     if ans !='yes':
-        print("Configuration is unchanged. Exiting program.")
+        print("Configuration is unchanged. Programm will be terminated")
         exit()  
     else:
         print("ACTION CONFIRMED.")
@@ -22,6 +21,7 @@ def confirm():
 
 
 def init(args):
+    print("WARNING: this action will reset configuration to default values. List of experiments will be lost. \nAre you sure? (yes/no):")
     confirm()
     init_config(args.confpath)
     

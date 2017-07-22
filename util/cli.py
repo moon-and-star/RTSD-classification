@@ -2,8 +2,13 @@
 
 import argparse
 import sys
+import pathlib2 as pathlib
+local_path = pathlib.Path('./')
+absolute_path = local_path.resolve()
+sys.path.append(str(absolute_path))
 
-from imgprocess.improc import setupImprocParser
+
+# from imgprocess.improc import setupImprocParser
 from netprocess.netgen import setupNetgenParser
 from netprocess.train import setupTrainParser
 from netprocess.test import setupTestParser
@@ -27,7 +32,7 @@ def setupCLI():
     parser.add_argument('-c', '--confpath', help='sets config file path, default: "{}"'.format(default),type=str, default=default)
 
     subparsers = parser.add_subparsers(help='List of commands', dest='command_name')
-    setupImprocParser(subparsers)
+    # setupImprocParser(subparsers)
     setupNetgenParser(subparsers)
     setupTrainParser(subparsers)
     setupTestParser(subparsers)   

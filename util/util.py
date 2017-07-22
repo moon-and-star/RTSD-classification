@@ -25,6 +25,18 @@ def safe_mkdir(directory_name):
 
 
 
+def confirm():
+    ans = sys.stdin.readline().replace('\n', '').lower()
+    while not(ans in ['yes', 'no']):
+        print('Please answer yes or no:')
+        ans = sys.stdin.readline().replace('\n', '').lower()
+
+    if ans !='yes':
+        print("Terminating.")
+        exit()  
+    else:
+        print("ACTION CONFIRMED.")
+
 
 class Params:
     def __setattr__(self, name, value):

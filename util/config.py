@@ -29,7 +29,7 @@ def config_exp(config):
 	exp['group_description'] = ''
 	exp['exp_num'] = None
 	exp['exp_description'] = ''
-
+	exp['log_pref'] = 'training_log'
 	config['exp'] = exp 
 	config['group_list'] = []
 	
@@ -42,6 +42,7 @@ def config_train(config):
 	tp['lr_step'] = 80 #
 	tp['snap_epoch'] = 80
 	tp['gpu_num'] = 0
+
 	config['train_params'] = tp
 
 	sp = {}
