@@ -5,11 +5,13 @@ local_path = pathlib.Path('./')
 absolute_path = local_path.resolve()
 sys.path.append(str(absolute_path))
 
-from util.config import get_config
+from util.config import get_config, set_config
 from util.util import confirm
 from netgen import netgen
 import os.path as osp
 import os
+from solver import solver_path, experiment_directory
+
 
 # from termcolor import colored
 
@@ -42,7 +44,7 @@ def check_experiment(args):
         check_overwriting(config)
 
 
-from solver import solver_path, experiment_directory
+
 
 def log_path(config):
     directory = experiment_directory(config)
@@ -59,7 +61,7 @@ def launch_training(config):
      --solver={solver}  2>&1| tee {log}".format(**locals()))
 
 
-from util.config import set_config
+
 
 def copy_config(config):
     root = experiment_directory(config)
@@ -75,6 +77,8 @@ def train(args):
     copy_config(config)
     launch_training(config)
     
+
+
 
 def setupTrainParser(subparsers):
     train_parser = subparsers.add_parser("train", help='- Does the same action as netgen, but also \
