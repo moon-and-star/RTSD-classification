@@ -58,8 +58,8 @@ def launch_training(args):
     # log = './Experiments/group_0/exp_0/training_log.txt'
     log = log_path(config)
     gpu_num = config['train_params']['gpu_num']
-    os.system('TOOLS=/opt/caffe/.build_release/tools')
-    os.system("GLOG_logtostderr=0 $TOOLS/caffe train -gpu {gpu_num}\
+    tools = '/opt/caffe/.build_release/tools'
+    os.system("GLOG_logtostderr=0 {tools}/caffe train -gpu {gpu_num}\
      --solver={solver}  2>&1| tee {log}".format(**locals()))
 
 
