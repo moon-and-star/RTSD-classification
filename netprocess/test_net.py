@@ -37,7 +37,7 @@ def remove_shuffle(model):
         for line in file:
             if 'shuffle' in line:
                 s = line.split(':')
-                tmp += line.replace('shuffle: {}'.format(int(s[1])), 'shuffle: false') 
+                tmp += line.replace('shuffle: {}'.format(s), 'shuffle: false') 
             else:
                 tmp += line
     
