@@ -148,7 +148,8 @@ def save_misclassified(misclass, config):
 
 def test_net(config):
     caffe.set_mode_gpu()
-    caffe.set_device(0)
+    gpu_num = config['train_params']['gpu_num']
+    caffe.set_device(gpu_num)
     # for phase in ['test', 'train', 'val']:
     for phase in ['test']:
         softmax = net_output(config, phase)
