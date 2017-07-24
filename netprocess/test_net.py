@@ -130,7 +130,6 @@ def save_accuracy(accuracy, config, phase):
 
         labels = sorted(accuracy)
         labels.remove('total')
-        print(labels)
         for label in labels:
             acc = accuracy[label]
             content = '{label:<10} {acc:<10}\n'.format(**locals())
@@ -139,7 +138,7 @@ def save_accuracy(accuracy, config, phase):
 
 
 
-def save_misclassified(misclass, config):
+def save_misclassified(misclass, config,phase):
     root = experiment_directory(config)
     misclassified = '{root}/misclassified_{phase}.txt'.format(**locals())
     with open(misclassified, 'w') as out:
