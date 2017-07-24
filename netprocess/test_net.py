@@ -52,7 +52,7 @@ def load_net(config, phase):
 def net_output(config, phase='test'):  
     net = load_net(config, phase)
     size = dataset_size(config, phase)
-    classes = num_of_classes(dataset)
+    classes = num_of_classes(config)
     softmax = np.zeros((size, classes))
 
     for i in range(size):
