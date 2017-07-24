@@ -79,9 +79,10 @@ def init_answers(length):
 
 
 
-def get_accuracy(softmax, gt):
+def get_accuracy(softmax, gt, ):
     acc = {}
     acc['total']= 0
+    class_answers = init_answers(softmax.shape[1])
     size = softmax.shape[0]
     for i in range(size):
         label = int(gt[i].replace('\n', '').split(' ')[1])
