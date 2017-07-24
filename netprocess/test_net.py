@@ -105,7 +105,7 @@ def get_accuracy(softmax, gt):
 
 
 
-def save_misclassified(softmax, gt):
+def get_misclassified(softmax, gt):
     misclass = []
     size = softmax.shape[0]
 
