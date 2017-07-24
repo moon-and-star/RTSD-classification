@@ -31,6 +31,21 @@ def set_batch_size(model, n):
     print('batch size has been set to {}'.format(n))
 
 
+def remove_shuffle(model):
+    tmp = ''
+    with  open(model, 'r') as file:
+        for line in file:
+            if 'shuffle' in line:
+                s = line.split(':')
+                tmp += line.replace('shuffle: {}'.format(int(s[1])), 'shuffle: false') 
+            else:
+                tmp += line
+    
+    with  open(model, 'w') as file:
+        file.write(tmp)
+
+
+
 
 def load_net(config, phase):
     prefix = snapshot_path(config)
@@ -40,6 +55,7 @@ def load_net(config, phase):
 
     model = proto_path(config, phase)
     set_batch_size(model, 1)
+    remove_shuffle(model)
     net = caffe.Net(model,1, weights=weights)
 
     return net
@@ -150,9 +166,9 @@ def save_misclassified(misclass, config,phase):
 
 
 def test_net(config, phases):
-    # caffe.set_mode_gpu()
+    caffe.set_mode_gpu()
     gpu_num = config['train_params']['gpu_num']
-    # caffe.set_device(gpu_num)
+    caffe.set_device(gpu_num)
 
     for phase in phases:
         softmax = net_output(config, phase)
