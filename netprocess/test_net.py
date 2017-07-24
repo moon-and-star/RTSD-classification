@@ -128,7 +128,7 @@ def save_accuracy(accuracy, config, phase):
         out.write('total accuracy: {}\n'.format(accuracy['total']))
         out.write('{:<10} {:<10}\n'.format('class', 'class_acc'))
 
-        for label in sorted(accuracy.remove('total')):
+        for label in sorted(accuracy).remove('total'):
             acc = accuracy[label]
             content = '{label:<10} {acc:<10}\n'.format(**locals())
             out.write(content)
