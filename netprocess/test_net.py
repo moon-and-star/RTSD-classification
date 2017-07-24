@@ -37,7 +37,10 @@ def load_net(config, phase):
     # batch_size = config['train_params']['batch_size']
     # iter_num = int(epoch_size(config) * math.ceil(float(dataset_size(config, phase)) / batch_size))
     iter_num = max_iter(config)
+    print(iter_num)
     weights = '{prefix}_iter_{iter_num}.caffemodel'.format(**locals())
+    print(weights)
+    exit()
 
     model = proto_path(config, phase)
     set_batch_size(model, 1)
@@ -92,12 +95,13 @@ def get_accuracy(softmax, gt):
             class_answers[label]['correct'] += 1.0
             acc['total'] += 1.0 
 
+
     acc['total'] /= size
     for label in range(len(class_answers)):
         correct = class_answers[label]['correct']
         total = class_answers[label]['total']
         if total > 0:
-            acc[str(label)] = correct/total
+            acc[str(label)] = float(correct) / total
         else:
             acc[str(label)] = "none"
 
@@ -150,9 +154,9 @@ def save_misclassified(misclass, config,phase):
 
 
 def test_net(config, phases):
-    caffe.set_mode_gpu()
+    # caffe.set_mode_gpu()
     gpu_num = config['train_params']['gpu_num']
-    caffe.set_device(gpu_num)
+    # caffe.set_device(gpu_num)
 
     for phase in phases:
         softmax = net_output(config, phase)
