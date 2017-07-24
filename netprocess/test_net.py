@@ -34,13 +34,9 @@ def set_batch_size(model, n):
 
 def load_net(config, phase):
     prefix = snapshot_path(config)
-    # batch_size = config['train_params']['batch_size']
-    # iter_num = int(epoch_size(config) * math.ceil(float(dataset_size(config, phase)) / batch_size))
     iter_num = max_iter(config)
-    print(iter_num)
     weights = '{prefix}_iter_{iter_num}.caffemodel'.format(**locals())
-    print(weights)
-    exit()
+
 
     model = proto_path(config, phase)
     set_batch_size(model, 1)
