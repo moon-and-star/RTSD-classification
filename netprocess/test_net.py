@@ -94,7 +94,7 @@ def get_accuracy(softmax, gt, ):
             acc['total'] += 1.0 
 
     acc['total'] /= size
-    for label in len(class_answers):
+    for label in class_answers:
         correct = class_answers[label]['correct']
         total = class_answers[label]['total']
         if total > 0:
