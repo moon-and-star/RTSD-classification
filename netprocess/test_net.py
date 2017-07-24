@@ -48,7 +48,6 @@ def load_net(config, phase):
 
 
 
-
 def net_output(config, phase='test'):  
     net = load_net(config, phase)
     size = dataset_size(config, phase)
@@ -58,12 +57,12 @@ def net_output(config, phase='test'):
     for i in range(size):
         if i % 100 == 0:
             print(i)
+        if i == 100:
+            break
         out = net.forward()
         softmax[i] = net.blobs['softmax'].data
 
     return softmax
-
-
 
 
 
@@ -79,7 +78,7 @@ def init_answers(length):
 
 
 
-def get_accuracy(softmax, gt, ):
+def get_accuracy(softmax, gt):
     acc = {}
     acc['total']= 0
     class_answers = init_answers(softmax.shape[1])
@@ -94,7 +93,7 @@ def get_accuracy(softmax, gt, ):
             acc['total'] += 1.0 
 
     acc['total'] /= size
-    for label in class_answers:
+    for label in range(len(class_answers)):
         correct = class_answers[label]['correct']
         total = class_answers[label]['total']
         if total > 0:
