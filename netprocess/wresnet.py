@@ -48,7 +48,7 @@ def append_data(net, phase, **kwargs):
         batch_size = batch_size,
         new_height = img_size + 2 * pad,
         new_width = img_size + 2 * pad,
-        shuffle=True,
+        # shuffle=True,
         root_folder=root)
 
     PHASE = get_caffe_phase(phase)
@@ -56,7 +56,7 @@ def append_data(net, phase, **kwargs):
         image_data_param = image_data_param,
         transform_param = get_transform_param(mean, img_size),
         ntop = 2,
-        include = dict(phase = caffe_pb2.Phase.Value(PHASE)),
+        # include = dict(phase = caffe_pb2.Phase.Value(PHASE)),
         name = "data")
 
     return net.data, net.label
