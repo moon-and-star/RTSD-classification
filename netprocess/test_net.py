@@ -57,8 +57,8 @@ def net_output(config, phase='test'):
     for i in range(size):
         if i % 100 == 0:
             print(i)
-        if i == 100:
-            break
+        # if i == 100:
+            # break
         out = net.forward()
         softmax[i] = net.blobs['softmax'].data
 
