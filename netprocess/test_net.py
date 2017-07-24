@@ -156,6 +156,7 @@ def test_net(config, phases):
         softmax = net_output(config, phase)
         gt = read_gt(config, phase)
         accuracy = get_accuracy(softmax, gt)
+        from pprint import pprint
         pprint(accuracy)
         misclassified = get_misclassified(softmax, gt)
 
