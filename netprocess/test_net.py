@@ -158,7 +158,7 @@ def save_misclassified(misclass, config,phase):
     root = experiment_directory(config)
     misclassified = '{root}/misclassified_{phase}.txt'.format(**locals())
     with open(misclassified, 'w') as out:
-        out.write('{:<20} {:<10}'.format('gt_entry', 'prediction'))
+        out.write('{:<20} {:<10}\n'.format('gt_entry', 'prediction'))
         for gt_entry, prediction in misclass:
             content = '{gt_entry:<20} {prediction:<10}\n'.format(**locals())
             out.write(content)
