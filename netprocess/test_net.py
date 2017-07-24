@@ -120,7 +120,7 @@ def get_misclassified(softmax, gt):
     return misclass
             
 
-def save_accuracy(accuracy, config):
+def save_accuracy(accuracy, config, phase):
     root = experiment_directory(config)
     acc_path = '{root}/accuracy_{phase}.txt'.format(**locals())
     
@@ -158,8 +158,8 @@ def test_net(config, phases):
         accuracy = get_accuracy(softmax, gt)
         misclassified = get_misclassified(softmax, gt)
 
-        save_accuracy(accuracy, config)
-        save_misclassified(misclassified, config)
+        save_accuracy(accuracy, config, phase)
+        save_misclassified(misclassified, config, phase)
 
 
 
