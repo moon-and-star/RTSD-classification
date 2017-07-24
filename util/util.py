@@ -68,6 +68,7 @@ def dataset_size(config, phase):
 def epoch_size(config, phase):
     data_size = dataset_size(config, phase)
     batch_size = config['train_params']['batch_size']
+    # print(data_size, batch_size)
 
     return int(ceil(data_size / float(batch_size)))
 
