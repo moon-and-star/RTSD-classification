@@ -15,7 +15,7 @@ def test(args):
     config = load_exp_config(config, args.group_num, args.exp_num)
 
     phases = ['val']
-    test_net(config)
+    test_net(config, phases)
   
 
 def setupTestParser(subparsers):
