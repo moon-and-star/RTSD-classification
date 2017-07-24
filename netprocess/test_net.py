@@ -82,6 +82,7 @@ def init_answers(length):
 def get_accuracy(softmax, gt):
     acc = {}
     acc['total']= 0
+    size = softmax.shape[0]
     for i in range(size):
         label = int(gt[i].replace('\n', '').split(' ')[1])
         prediction = np.argmax(softmax[i])
@@ -146,12 +147,12 @@ def save_misclassified(misclass, config):
 
 
 
-def test_net(config):
+def test_net(config, phases):
     caffe.set_mode_gpu()
     gpu_num = config['train_params']['gpu_num']
     caffe.set_device(gpu_num)
-    # for phase in ['test', 'train', 'val']:
-    for phase in ['test']:
+
+    for phase in phases:
         softmax = net_output(config, phase)
         gt = read_gt(config, phase)
         accuracy = get_accuracy(softmax, gt)
