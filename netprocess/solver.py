@@ -12,6 +12,7 @@ from math import ceil
 def max_iter(config):
     epoch_sz = epoch_size(config, 'train')
     epoch_num = config['train_params']['epoch_num']
+    # print(epoch_sz)
 
     return int(epoch_sz * epoch_num)
 
