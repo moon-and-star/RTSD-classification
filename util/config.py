@@ -2,6 +2,7 @@
 
 import json
 from pprint import pprint
+import os.path as osp
 
 def config_img(config):
 	im = {}
@@ -86,6 +87,16 @@ def set_config(path, config):
 	with open(path, 'w') as out:
 		json.dump(config, out, sort_keys=True, indent=4) 
 	
+
+def load_exp_config(config, group, exp):
+    root = config['exp']['exp_path']
+    path = '{root}/group_{group}/exp_{exp}/config.json'.format(**locals())
+    if not osp.exists(path):
+        print('ERROR: no config file ("{path}" not found)'.format(**locals()))
+        exit()
+
+    return get_config(path)
+
 
 def init_config(path):
 	config = initial_config()

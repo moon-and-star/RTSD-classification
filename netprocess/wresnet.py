@@ -9,8 +9,8 @@ absolute_path = local_path.resolve()
 sys.path.append(str(absolute_path))
 
 
-from util.util import safe_mkdir, load_image_mean
-from solver import gen_solver, proto_path
+from util.util import safe_mkdir, load_image_mean, num_of_classes, proto_path
+from solver import gen_solver
 
 import caffe
 from caffe import layers as L
@@ -298,22 +298,12 @@ def avgpool_args():
     return args
 
 
-def NumOfClasses(config):
-    gt_path = '{}/gt_train.txt'.format(config['img']['processed_path'])
-
-    with open(gt_path) as f:
-        classes = set()
-        for line in f.readlines():
-            s = line.split(' ')
-            classes.add(s[1].replace('\n', ''))
-
-        return len(classes)
 
 
 def fc_args(config):
     args = {}
     args['name'] = 'fc'
-    args['num_output'] = NumOfClasses(config)
+    args['num_output'] = num_of_classes(config)
     args['weight_filler'] = dict(type = 'xavier')
 
     return args

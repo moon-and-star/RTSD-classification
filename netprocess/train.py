@@ -6,11 +6,11 @@ absolute_path = local_path.resolve()
 sys.path.append(str(absolute_path))
 
 from util.config import get_config, set_config
-from util.util import confirm
+from util.util import confirm, experiment_directory
 from netgen import netgen
 import os.path as osp
 import os
-from solver import solver_path, experiment_directory
+from solver import solver_path
 
 
 # from termcolor import colored
@@ -67,6 +67,7 @@ def copy_config(config):
     root = experiment_directory(config)
     path = '{root}/config.json'.format(**locals())
     set_config(path, config)
+
 
 
 def train(args):

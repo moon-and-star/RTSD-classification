@@ -5,27 +5,17 @@ local_path = pathlib.Path('./')
 absolute_path = local_path.resolve()
 sys.path.append(str(absolute_path))
 
-from util.config import get_config, set_config
+from util.config import get_config, load_exp_config
 from util.util import confirm
-import os.path as osp
-import os
-from solver import solver_path, experiment_directory
-from train import launch_training
 
-
-def load_exp_config(config, group, exp):
-    root = config['exp']['exp_path']
-    path = '{root}/group_{group}/exp_{exp}/config.json'.format(**locals())
-    if not osp.exists(path):
-        print('ERROR: no config file ("{path}" not found)'.format(**locals()))
-        exit()
-
-    return get_config(path)
 
 
 def repeat(args):
     config = get_config(args.confpath)
     config = load_exp_config(config, args.group_num, args.exp_num)
+
+    print('WARNING: this action will overwrite previous experiment logs. Are you sure? (yes/no)')
+    confirm()
     launch_training(config)
     
 
@@ -35,10 +25,8 @@ def setupRepeatParser(subparsers):
                         Repeats current experiment by default.')
      repeat_parser.set_defaults(func=repeat)
 
-     repeat_parser.add_argument('group_num',action='store', type=int,
-                        help='group number')
-     repeat_parser.add_argument('exp_num',action='store', type=int,
-                        help='experiment number')
+     repeat_parser.add_argument('group_num',action='store', type=int, help='group number')
+     repeat_parser.add_argument('exp_num',action='store', type=int, help='experiment number')
 
 
 
