@@ -53,6 +53,7 @@ def read_gt(config, phase):
     return lines
 
 
+
 def proto_path(config, phase):
     directory = experiment_directory(config)
     return "{directory}/{phase}.prototxt".format(**locals())

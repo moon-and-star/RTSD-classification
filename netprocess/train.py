@@ -6,11 +6,12 @@ absolute_path = local_path.resolve()
 sys.path.append(str(absolute_path))
 
 from util.config import get_config, set_config
-from util.util import confirm, experiment_directory
+from util.util import confirm, experiment_directory, read_gt
 from netgen import netgen
 import os.path as osp
 import os
 from solver import solver_path
+from random import shuffle
 
 
 # from termcolor import colored
@@ -32,7 +33,8 @@ def check_overwriting(config):
     log = config['exp']['log_pref']
     path = '{root}/group_{group}/exp_{exp_num}/{log}'.format(**locals())
     if osp.exists(path):
-        print("WARNING: current experiment has been trained earlier. Do you want to overwrite it?")
+        print("WARNING: current experiment has been trained earlier. Do you want to overwrite it?\
+            \n(group = {group}, exp_num = {exp_num})".format(**locals()))
         confirm()
 
 
@@ -69,13 +71,43 @@ def copy_config(config):
     set_config(path, config)
 
 
+def rewrite_gt(gt, config, phase):
+    root = config['img']['processed_path']
+    gt_path = '{root}/gt_{phase}.txt'.format(**locals()) 
+
+    with open(gt_path, 'w') as f:
+        for line in gt:
+            f.write(line)
+
+
+def save_exp_gt(gt, config, phase):
+    root = config['exp']['exp_path']
+    exp = config['exp']['exp_num']
+    group = config['exp']['group']
+    gt_path = '{root}/group_{group}/exp_{exp}/gt_{phase}.txt'.format(**locals()) 
+
+    with open(gt_path, 'w') as f:
+        for line in gt:
+            f.write(line)
+
+
+
+def shuffle_data(config):
+    gt = read_gt(config, 'train')
+    shuffle(gt)
+    rewrite_gt(gt, config, 'train')
+    save_exp_gt(gt, config, 'train')
+    
+
 
 def train(args):
     check_experiment(args)
-    netgen(args)
-
     config = get_config(args.confpath)
     copy_config(config)
+
+    
+    shuffle_data(config)
+    netgen(args)
     launch_training(config)
     
 

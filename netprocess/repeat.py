@@ -7,6 +7,20 @@ sys.path.append(str(absolute_path))
 
 from util.config import get_config, load_exp_config
 from util.util import confirm
+from shutil import copyfile
+from train import launch_training
+
+
+def change_gt(config, phase):
+    root = config['exp']['exp_path']
+    exp = config['exp']['exp_num']
+    group = config['exp']['group']
+    src = '{root}/group_{group}/exp_{exp}/gt_{phase}.txt'.format(**locals()) 
+
+    root = config['img']['processed_path']
+    dst = '{root}/gt_{phase}.txt'.format(**locals()) 
+
+    copyfile(src, dst)
 
 
 
@@ -16,6 +30,7 @@ def repeat(args):
 
     print('WARNING: this action will overwrite previous experiment logs. Are you sure? (yes/no)')
     confirm()
+    change_gt(config, 'train')
     launch_training(config)
     
 
