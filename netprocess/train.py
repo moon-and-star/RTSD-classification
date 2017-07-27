@@ -75,16 +75,29 @@ def shuffle_gt(config, phase):
             f.write(line)
     
 
+def upload_results(config):
+    exp_path = experiment_directory(config)
+    os.system("git add {exp_path}".format(**locals()))
+
+    exp_num = config['exp']['exp_num']
+    group = config['exp']['group']
+    os.system("git commit -m 'results for {group}.{exp_num}'".format(**locals()))
+
+    os.system("git push")
+    
+
 
 def train(args):
     check_experiment(args)
     config = get_config(args.confpath)
     copy_config(config)
 
-    
     shuffle_gt(config, 'train')
     netgen(args)
     launch_training(config)
+
+    if args.upload:
+        upload_results(config)
     
 
 
@@ -97,3 +110,5 @@ def setupTrainParser(subparsers):
 
     train_parser.add_argument('-f','--force',action='store_true',
                         help='overwrites existing experiment if set')
+    train_parser.add_argument('-u','--upload',action='store_true',
+                        help='upload results (to github)')
