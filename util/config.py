@@ -58,13 +58,11 @@ def config_train(config):
 
 
 
-
+from collections import OrderedDict
 
 def initial_config():
-	config = {}
+	config = OrderedDict()
 	config['randseed'] = 42
-	config_img(config)
-	config_exp(config)
 	config_train(config)
 
 	wrn = {}
@@ -72,6 +70,8 @@ def initial_config():
 	wrn['metablock_depth'] = 2 #number of blocks in one block of blocks (watch article)
 	config['wide_resnet'] = wrn
 
+	config_img(config)
+	config_exp(config)
 
 	return config
 	
@@ -80,13 +80,15 @@ def initial_config():
 
 def get_config(path):
 	with open(path) as f:
-		return json.load(f)
+		return json.load(f, object_pairs_hook=OrderedDict)
+
 
 
 def set_config(path, config):
 	with open(path, 'w') as out:
-		json.dump(config, out, sort_keys=True, indent=4) 
+		json.dump(config, out, indent=4) 
 	
+
 
 def load_exp_config(config, group, exp):
     root = config['exp']['exp_path']
@@ -103,7 +105,7 @@ def init_config(path):
 	set_config(path, config)
 
 	print('\nConfiguration file path: {}\n'.format(path) )
-	print(json.dumps(get_config(path), indent=4, sort_keys=True))
+	print(json.dumps(get_config(path), indent=4))
 	
 	return config
 

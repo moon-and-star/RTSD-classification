@@ -53,6 +53,20 @@ def read_gt(config, phase):
     return lines
 
 
+def exp_gt_path(config, phase):
+    root = config['exp']['exp_path']
+    exp = config['exp']['exp_num']
+    group = config['exp']['group']
+    gt_path = '{root}/group_{group}/exp_{exp}/gt_{phase}.txt'.format(**locals()) 
+    return gt_path
+
+
+def log_path(config):
+    directory = experiment_directory(config)
+    prefix = config['exp']['log_pref']
+    return "{directory}/{prefix}".format(**locals())
+
+
 
 def proto_path(config, phase):
     directory = experiment_directory(config)
