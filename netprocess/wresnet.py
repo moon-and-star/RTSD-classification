@@ -9,7 +9,8 @@ absolute_path = local_path.resolve()
 sys.path.append(str(absolute_path))
 
 
-from util.util import safe_mkdir, load_image_mean, num_of_classes, proto_path
+from util.util import safe_mkdir, load_image_mean 
+from util.util import num_of_classes, proto_path, exp_gt_path
 from solver import gen_solver
 
 import caffe
@@ -37,18 +38,15 @@ def get_transform_param(mean, img_size):
 
 def append_data(net, phase, **kwargs):
     img_size, img_path = kwargs['img_size'], kwargs['img_path']
-    batch_size, pad = kwargs['batch_size'], kwargs['pad']
-
     mean_path = '{img_path}/{phase}/mean.txt'.format(**locals())
     mean = load_image_mean(mean_path)
     root = "{img_path}/{phase}/".format(**locals())
 
     image_data_param = dict(
-        source = '{img_path}/gt_{phase}.txt'.format(**locals()), 
-        batch_size = batch_size,
-        new_height = img_size + 2 * pad,
-        new_width = img_size + 2 * pad,
-        # shuffle=True,
+        source=kwargs['gt_path'],
+        batch_size = kwargs['batch_size'],
+        new_height = img_size + 2 * kwargs['pad'],
+        new_width = img_size + 2 * kwargs['pad'],
         root_folder=root)
 
     PHASE = get_caffe_phase(phase)
@@ -56,7 +54,6 @@ def append_data(net, phase, **kwargs):
         image_data_param = image_data_param,
         transform_param = get_transform_param(mean, img_size),
         ntop = 2,
-        # include = dict(phase = caffe_pb2.Phase.Value(PHASE)),
         name = "data")
 
     return net.data, net.label
@@ -206,14 +203,13 @@ def append_loss(net, bottom, label, phase):
 
 
 
-
-def data_args(config):
+def data_args(config, phase):
     args = {}
     args['img_path'] = config['img']['processed_path']
     args['img_size'] = config['img']['img_size']
     args['pad'] = config['img']['padding']
     args['batch_size'] = config['train_params']['batch_size']
-    # args['root_folder'] = config[]
+    args['gt_path'] = exp_gt_path(config, phase)
 
     return args
 
@@ -321,7 +317,7 @@ def append_tail(net, bottom, label, phase):
 def wresnet(config, phase):
     net = caffe.NetSpec()
 
-    data, label = append_data(net, phase, **data_args(config))
+    data, label = append_data(net, phase, **data_args(config, phase))
     conv1 = append_conv(net, data, **conv1_args(config))
     conv2 = append_conv_block(net, conv1, **conv2_args(config))
     conv3 = append_conv_block(net, conv2, **conv3_args(config))

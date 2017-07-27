@@ -6,15 +6,14 @@ absolute_path = local_path.resolve()
 sys.path.append(str(absolute_path))
 
 from util.config import get_config, set_config
-from util.util import confirm, experiment_directory, read_gt
+from util.util import confirm, experiment_directory 
+from util.util import read_gt, exp_gt_path, log_path
 from netgen import netgen
 import os.path as osp
 import os
 from solver import solver_path
 from random import shuffle
 
-
-# from termcolor import colored
 
 
 def check_existence(config):
@@ -48,12 +47,6 @@ def check_experiment(args):
 
 
 
-def log_path(config):
-    directory = experiment_directory(config)
-    prefix = config['exp']['log_pref']
-    return "{directory}/{prefix}".format(**locals())
-
-
 def launch_training(config):
     solver = solver_path(config)
     log = log_path(config)
@@ -64,39 +57,22 @@ def launch_training(config):
 
 
 
-
 def copy_config(config):
     root = experiment_directory(config)
     path = '{root}/config.json'.format(**locals())
     set_config(path, config)
 
 
-def rewrite_gt(gt, config, phase):
-    root = config['img']['processed_path']
-    gt_path = '{root}/gt_{phase}.txt'.format(**locals()) 
-
-    with open(gt_path, 'w') as f:
-        for line in gt:
-            f.write(line)
 
 
-def save_exp_gt(gt, config, phase):
-    root = config['exp']['exp_path']
-    exp = config['exp']['exp_num']
-    group = config['exp']['group']
-    gt_path = '{root}/group_{group}/exp_{exp}/gt_{phase}.txt'.format(**locals()) 
-
-    with open(gt_path, 'w') as f:
-        for line in gt:
-            f.write(line)
-
-
-
-def shuffle_data(config):
-    gt = read_gt(config, 'train')
+def shuffle_gt(config, phase):
+    gt = read_gt(config, phase)
     shuffle(gt)
-    rewrite_gt(gt, config, 'train')
-    save_exp_gt(gt, config, 'train')
+
+    gt_path = exp_gt_path(config, phase)
+    with open(gt_path, 'w') as f:
+        for line in gt:
+            f.write(line)
     
 
 
@@ -106,7 +82,7 @@ def train(args):
     copy_config(config)
 
     
-    shuffle_data(config)
+    shuffle_gt(config, 'train')
     netgen(args)
     launch_training(config)
     
