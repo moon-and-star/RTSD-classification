@@ -51,7 +51,8 @@ def launch_training(config):
     solver = solver_path(config)
     log = log_path(config)
     gpu_num = config['train_params']['gpu_num']
-    tools = '/opt/caffe/.build_release/tools'
+    # tools = '/opt/caffe/.build_release/tools'
+    tools = '/opt/caffe/build/tools'
     os.system("GLOG_logtostderr=0 {tools}/caffe train -gpu {gpu_num}\
      --solver={solver}  2>&1| tee {log}".format(**locals()))
 
