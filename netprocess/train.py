@@ -66,15 +66,16 @@ def copy_config(config):
 
 
 
-def shuffle_gt(config, phase):
-    gt = read_gt(config, phase)
-    shuffle(gt)
+def shuffle_gt(config):
+    for phase in ['train', 'test', 'val']:
+        gt = read_gt(config, phase)
+        shuffle(gt)
 
-    gt_path = exp_gt_path(config, phase)
-    with open(gt_path, 'w') as f:
-        for line in gt:
-            f.write(line)
-    
+        gt_path = exp_gt_path(config, phase)
+        with open(gt_path, 'w') as f:
+            for line in gt:
+                f.write(line)
+        
 
 def upload_results(config):
     exp_path = experiment_directory(config)
@@ -93,7 +94,7 @@ def train(args):
     config = get_config(args.confpath)
     copy_config(config)
 
-    shuffle_gt(config, 'train')
+    shuffle_gt(config)
     netgen(args)
     launch_training(config)
 
