@@ -36,25 +36,44 @@ def get_transform_param(mean, img_size):
         return dict(mirror=False, crop_size=img_size , scale=1.0/255)
         
 
+# def append_data(net, phase, **kwargs):
+#     img_size, img_path = kwargs['img_size'], kwargs['img_path']
+#     mean_path = '{img_path}/{phase}/mean.txt'.format(**locals())
+#     mean = load_image_mean(mean_path)
+#     root = "{img_path}/{phase}/".format(**locals())
+
+#     image_data_param = dict(
+#         source=kwargs['gt_path'],
+#         batch_size = kwargs['batch_size'],
+#         new_height = img_size + 2 * kwargs['pad'],
+#         new_width = img_size + 2 * kwargs['pad'],
+#         root_folder=root)
+
+#     PHASE = get_caffe_phase(phase)
+#     net['data'], net['label'] = L.ImageData(
+#         image_data_param = image_data_param,
+#         transform_param = get_transform_param(mean, img_size),
+#         ntop = 2,
+#         name = "data")
+
+#     return net.data, net.label
+
+
 def append_data(net, phase, **kwargs):
     img_size, img_path = kwargs['img_size'], kwargs['img_path']
     mean_path = '{img_path}/{phase}/mean.txt'.format(**locals())
     mean = load_image_mean(mean_path)
-    root = "{img_path}/{phase}/".format(**locals())
 
-    image_data_param = dict(
-        source=kwargs['gt_path'],
-        batch_size = kwargs['batch_size'],
-        new_height = img_size + 2 * kwargs['pad'],
-        new_width = img_size + 2 * kwargs['pad'],
-        root_folder=root)
 
     PHASE = get_caffe_phase(phase)
-    net['data'], net['label'] = L.ImageData(
-        image_data_param = image_data_param,
+    net['data'], net['label'] = L.Data(
+        batch_size = batch_size,
+        backend = P.Data.LMDB,
+        source = lmdb,
         transform_param = get_transform_param(mean, img_size),
         ntop = 2,
         name = "data")
+ 
 
     return net.data, net.label
 
