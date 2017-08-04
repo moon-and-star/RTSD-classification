@@ -69,7 +69,7 @@ def append_data(net, phase, **kwargs):
     net['data'], net['label'] = L.Data(
         batch_size = kwargs['batch_size'],
         backend = P.Data.LMDB,
-        source = lmdb,
+        source = kwargs['lmdb'],
         transform_param = get_transform_param(mean, img_size),
         ntop = 2,
         name = "data")
