@@ -225,7 +225,7 @@ def append_loss(net, bottom, label, phase):
 def data_args(config, phase):
     args = {}
     args['img_path'] = config['img']['processed_path']
-    args['lmdb'] = '{}/lmdb/'.format(args['img_path'])
+    args['lmdb'] = '{}/lmdb/{}/lmdb'.format(args['img_path'], phase)
     args['img_size'] = config['img']['img_size']
     args['pad'] = config['img']['padding']
     args['batch_size'] = config['train_params']['batch_size']
