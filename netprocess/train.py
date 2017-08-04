@@ -75,8 +75,8 @@ def shuffle_gt(config):
         with open(gt_path, 'w') as f:
             for line in gt:
                 f.write(line)
-        
-
+       
+       
 def upload_results(config):
     exp_path = experiment_directory(config)
     os.system("git add {exp_path}".format(**locals()))
