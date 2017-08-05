@@ -14,7 +14,7 @@ def test(args):
     config = get_config(args.confpath)
     config = load_exp_config(config, args.group_num, args.exp_num)
 
-    phases = ['val']
+    phases = ['train']
     test_net(config, phases)
   
 
