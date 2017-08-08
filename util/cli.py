@@ -8,7 +8,7 @@ absolute_path = local_path.resolve()
 sys.path.append(str(absolute_path))
 
 
-# from imgprocess.improc import setupImprocParser
+from imgprocess.improc import setupImprocParser
 from netprocess.netgen import setupNetgenParser
 from netprocess.train import setupTrainParser
 from netprocess.test import setupTestParser
