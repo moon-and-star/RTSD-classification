@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import sys
 import pathlib2 as pathlib
-local_path = pathlib.Path('./')
+local_path = pathlib.Path('./imgprocess')
 absolute_path = local_path.resolve()
 sys.path.append(str(absolute_path))
 
@@ -9,9 +9,9 @@ sys.path.append(str(absolute_path))
 
 
 from pprint import pprint
-from imgprocess.preprocess import process
+from preprocess import process
 from util.config import get_config
-from marking import classification_marking, save_marking
+from imgprocess.marking import classification_marking, save_marking
 from crop import marking2cropped
 from marking import load_classification_marking
 
