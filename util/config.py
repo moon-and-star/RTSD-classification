@@ -39,7 +39,7 @@ def config_train(config):
 	tp = {}
 	tp['batch_size'] = 128 #
 	tp['epoch_num'] = 400 #
-	tp['test_frequency'] = 1 #
+	tp['test_frequency'] = 1 # for caffe
 	tp['lr_step'] = 80 #
 	tp['snap_epoch'] = 80
 	tp['gpu_num'] = 0

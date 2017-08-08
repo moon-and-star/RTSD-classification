@@ -32,7 +32,7 @@ def setupCLI():
     parser.add_argument('-c', '--confpath', help='sets config file path, default: "{}"'.format(default),type=str, default=default)
 
     subparsers = parser.add_subparsers(help='List of commands', dest='command_name')
-    # setupImprocParser(subparsers)
+    setupImprocParser(subparsers)
     setupNetgenParser(subparsers)
     setupTrainParser(subparsers)
     setupTestParser(subparsers)   
