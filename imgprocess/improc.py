@@ -10,14 +10,14 @@ sys.path.append(str(absolute_path))
 
 from pprint import pprint
 from imgprocess.preprocess import process
-from util.config import getConfig
+from util.config import get_config
 from marking import classification_marking, save_marking
 from crop import marking2cropped
 from marking import load_classification_marking
 
 
 def crop2proc(args):
-    config = getConfig(args.confpath)
+    config = get_config(args.confpath)
     img = config['img']
     rootpath = img['cropped_path']
     outpath = img['processed_path']
@@ -31,7 +31,7 @@ def crop2proc(args):
 
 
 def process_marking(args):
-    config = getConfig(args.confpath)
+    config = get_config(args.confpath)
     img = config['img']
     path = img['marking_path']
     marking = classification_marking(
@@ -45,7 +45,7 @@ def process_marking(args):
 
 
 def process_imgs(args):
-    img = getConfig(args.confpath)['img']
+    img = get_config(args.confpath)['img']
     marking = load_classification_marking(img['marking_path'], img['classmark_prefix'])
     img_path, cropped_path = img['uncut_path'], img['cropped_path']
     marking2cropped(marking=marking, img_path=img_path, cropped_path=cropped_path)
