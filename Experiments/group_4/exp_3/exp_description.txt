@@ -1,0 +1,1 @@
+reduce_lr = ReduceLROnPlateau(monitor='val_acc', factor=0.5, patience=2, verbose=1, epsilon=0.005, min_lr=0.0001)

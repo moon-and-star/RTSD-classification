@@ -1,0 +1,67 @@
+{
+    "exp": {
+        "exp_description": "reduce_lr = ReduceLROnPlateau(monitor='val_acc', factor=0.5, patience=2, verbose=1, epsilon=0.01, min_lr=0.0001), batch_size = 64 (prev=128)",
+        "exp_num": 5,
+        "exp_path": "./Experiments",
+        "group": 4,
+        "group_description": "smarter learning rate",
+        "log_pref": "training_log"
+    },
+    "group_list": [
+        {
+            "exp_count": 3,
+            "group_num": 0
+        },
+        {
+            "exp_count": 5,
+            "group_num": 1
+        },
+        {
+            "exp_count": 1,
+            "group_num": 2
+        },
+        {
+            "group_num": 3,
+            "exp_count": 2
+        },
+        {
+            "group_num": 4,
+            "exp_count": 6
+        }
+    ],
+    "img": {
+        "border": "replicate",
+        "classmark_prefix": "classmarking",
+        "cropped_path": "../global_data/Traffic_signs/RTSD/classification",
+        "img_size": 32,
+        "marking_path": "../global_data/Traffic_signs/RTSD",
+        "min_class_size": 300,
+        "padding": 0,
+        "processed_path": "./local_data/RTSD",
+        "test_ratio": 0.2,
+        "uncut_path": "../global_data/Traffic_signs/RTSD/imgs",
+        "val_ratio": 0.1
+    },
+    "randseed": 42,
+    "solver_exact": {
+        "base_lr": 0.01,
+        "gamma": 0.2,
+        "lr_policy": "step",
+        "momentum": 0.9,
+        "solver_mode": "GPU",
+        "type": "SGD",
+        "weight_decay": 0.0005
+    },
+    "train_params": {
+        "batch_size": 64,
+        "epoch_num": 100,
+        "gpu_num": 1,
+        "lr_step": 10,
+        "snap_epoch": 1,
+        "test_frequency": 1
+    },
+    "wide_resnet": {
+        "metablock_depth": 4,
+        "width": 4
+    }
+}
