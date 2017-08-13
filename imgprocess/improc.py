@@ -1,20 +1,4 @@
 #!/usr/bin/env python
-import sys
-import pathlib2 as pathlib
-local_path = pathlib.Path('./imgprocess')
-absolute_path = local_path.resolve()
-sys.path.append(str(absolute_path))
-
-
-
-
-from pprint import pprint
-from preprocess import process
-from util.config import get_config
-from imgprocess.marking import classification_marking, save_marking
-from crop import marking2cropped
-from marking import load_classification_marking
-
 
 def crop2proc(args):
     config = get_config(args.confpath)
@@ -59,6 +43,12 @@ def uncut2cropped(args): #full images to classification set
 
 
 def improc(args):
+    from .preprocess import process
+    from util.config import get_config
+    from .imgprocess.marking import classification_marking, save_marking
+    from .crop import marking2cropped
+    from .marking import load_classification_marking
+
     if args.uncut:
         uncut2cropped(args)
     if args.cropped:

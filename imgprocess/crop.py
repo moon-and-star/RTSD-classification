@@ -2,7 +2,7 @@
 import json
 from pprint import pprint
 import cv2
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 from util.util import safe_mkdir
 from marking import load_marking
 
