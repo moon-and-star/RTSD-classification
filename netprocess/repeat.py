@@ -1,14 +1,9 @@
 #!/usr/bin/env python
-import sys
-import pathlib2 as pathlib
-local_path = pathlib.Path('./')
-absolute_path = local_path.resolve()
-sys.path.append(str(absolute_path))
 
 from util.config import get_config, load_exp_config
 from util.util import confirm, exp_gt_path
 from shutil import copyfile
-from train import launch_training
+from .train import launch_training
 
 
 
@@ -18,7 +13,9 @@ def repeat(args):
 
     print('WARNING: this action will overwrite previous experiment logs. Are you sure? (yes/no)')
     confirm()
-    launch_training(config)
+
+    framework = args.framework
+    launch_training(config, framework)
     
 
 
@@ -29,6 +26,8 @@ def setupRepeatParser(subparsers):
 
      repeat_parser.add_argument('group_num',action='store', type=int, help='group number')
      repeat_parser.add_argument('exp_num',action='store', type=int, help='experiment number')
+     repeat_parser.add_argument('--framework',action='store', type=str, default='keras',
+                        help='')
 
 
 

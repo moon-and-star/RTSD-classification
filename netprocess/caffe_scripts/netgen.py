@@ -5,8 +5,8 @@ local_path = pathlib.Path('./')
 absolute_path = local_path.resolve()
 sys.path.append(str(absolute_path))
 
-
-from wresnet import gen_wresnet
+# for caffe
+from .wresnet-caffe import gen_wresnet
 from util.config import get_config
 
 

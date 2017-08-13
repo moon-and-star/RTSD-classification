@@ -1,19 +1,4 @@
 #!/usr/bin/env python
-import sys
-import pathlib2 as pathlib
-local_path = pathlib.Path('./')
-absolute_path = local_path.resolve()
-sys.path.append(str(absolute_path))
-
-from util.config import get_config, set_config
-from util.util import confirm, experiment_directory 
-from util.util import read_gt, exp_gt_path, log_path
-from netgen import netgen
-import os.path as osp
-import os
-from solver import solver_path
-from random import shuffle
-
 
 
 def check_existence(config):
@@ -46,15 +31,38 @@ def check_experiment(args):
 
 
 
+def train_caffe(config):
+    from .caffe_scripts.solver import solver_path
 
-def launch_training(config):
+    shuffle_gt(config)
+
     solver = solver_path(config)
     log = log_path(config)
     gpu_num = config['train_params']['gpu_num']
-    # tools = '/opt/caffe/.build_release/tools'
+
     tools = '/opt/caffe/build/tools'
     os.system("GLOG_logtostderr=0 {tools}/caffe train -gpu {gpu_num}\
      --solver={solver}  2>&1| tee {log}".format(**locals()))
+
+
+
+def train_keras(config):
+    os.environ["CUDA_VISIBLE_DEVICES"] = "{}".format(config['train_params']['gpu_num'])
+    os.environ["KERAS_BACKEND"] = 'tensorflow'
+    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+
+    from .keras_scripts.wresnet import train_wresnet
+    train_wresnet(config)
+
+
+
+def launch_training(config, framework):
+    if framework == 'caffe':
+        train_caffe(config)
+    elif framework == 'keras':
+        train_keras(config)
+    else:
+        print("ERROR: Unknown framework: {framework}".format(**locals()))
 
 
 
@@ -65,7 +73,7 @@ def copy_config(config):
 
 
 
-
+# needed for caffe
 def shuffle_gt(config):
     for phase in ['train', 'test', 'val']:
         gt = read_gt(config, phase)
@@ -89,14 +97,26 @@ def upload_results(config):
     
 
 
-def train(args):
+def train(args):   
+    from util.config import get_config, set_config
+    from util.util import confirm, experiment_directory 
+    from util.util import read_gt, exp_gt_path, log_path
+
+    import os.path as osp
+    import os
+    from random import shuffle
+
+
     check_experiment(args)
     config = get_config(args.confpath)
     copy_config(config)
 
-    shuffle_gt(config)
-    netgen(args)
-    launch_training(config)
+    framework = args.framework
+    if framework == 'caffe':
+        from .caffe_scripts.netgen import netgen # for caffe
+        netgen(args)
+
+    launch_training(config, framework)
 
     if args.upload:
         upload_results(config)
@@ -114,3 +134,5 @@ def setupTrainParser(subparsers):
                         help='overwrites existing experiment if set')
     train_parser.add_argument('-u','--upload',action='store_true',
                         help='upload results (to github)')
+    train_parser.add_argument('--framework',action='store', type=str, default='keras',
+                        help='')
