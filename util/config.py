@@ -38,10 +38,10 @@ def config_exp(config):
 def config_train(config):
 	tp = {}
 	tp['batch_size'] = 128 #
-	tp['epoch_num'] = 400 #
+	tp['epoch_num'] = 20#
 	tp['test_frequency'] = 1 # for caffe
-	tp['lr_step'] = 80 #
-	tp['snap_epoch'] = 80
+	tp['lr_step'] = 10 #
+	tp['snap_epoch'] = 1
 	tp['gpu_num'] = 0
 
 	config['train_params'] = tp

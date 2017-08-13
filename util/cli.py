@@ -9,15 +9,15 @@ sys.path.append(str(absolute_path))
 
 
 from imgprocess.improc import setupImprocParser
-from netprocess.netgen import setupNetgenParser
+# from netprocess.netgen import setupNetgenParser
 from netprocess.train import setupTrainParser
 from netprocess.test import setupTestParser
 from netprocess.repeat import setupRepeatParser
 
-from newgroup import setupNewGroupParser
-from newexp import setupNewExpParser
-from showconfig import setupShowConfigParser
-from init import setupInitParser
+from .newgroup import setupNewGroupParser
+from .newexp import setupNewExpParser
+from .showconfig import setupShowConfigParser
+from .init import setupInitParser
 
 
 
@@ -33,7 +33,7 @@ def setupCLI():
 
     subparsers = parser.add_subparsers(help='List of commands', dest='command_name')
     setupImprocParser(subparsers)
-    setupNetgenParser(subparsers)
+    # setupNetgenParser(subparsers)
     setupTrainParser(subparsers)
     setupTestParser(subparsers)   
     setupRepeatParser(subparsers)

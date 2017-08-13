@@ -7,8 +7,8 @@ absolute_path = local_path.resolve()
 sys.path.append(str(absolute_path))
 
 
-from config import get_config, set_config
-from util import safe_mkdir
+from .config import get_config, set_config
+from .util import safe_mkdir
 
 
 

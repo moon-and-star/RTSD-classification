@@ -1,14 +1,14 @@
 #!/usr/bin/env python
-import sys
-import pathlib2 as pathlib
+# import sys
+# import pathlib2 as pathlib
 
-local_path = pathlib.Path('./')
-absolute_path = local_path.resolve()
-sys.path.append(str(absolute_path))
+# local_path = pathlib.Path('./')
+# absolute_path = local_path.resolve()
+# sys.path.append(str(absolute_path))
 
 
-from config import get_config, set_config
-from util import safe_mkdir
+from .config import get_config, set_config
+from .util import safe_mkdir
 
 
 # def update_group_list(config):

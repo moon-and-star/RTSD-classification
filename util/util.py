@@ -63,8 +63,16 @@ def exp_gt_path(config, phase):
 
 def log_path(config):
     directory = experiment_directory(config)
+    safe_mkdir(directory)
     prefix = config['exp']['log_pref']
     return "{directory}/{prefix}".format(**locals())
+
+def log_directory(config, name):
+    directory = experiment_directory(config)
+    log_dir = "{directory}/{name}".format(**locals())
+    safe_mkdir(log_dir)
+
+    return log_dir
 
 
 
@@ -104,6 +112,13 @@ def snapshot_path(config):
     snap_path = '{exp_dir}/snapshots'.format(**locals())
     safe_mkdir(snap_path)
     return '{snap_path}/snap'.format(**locals())
+
+
+def checkpoint_path(config):
+    exp_dir = experiment_directory(config)
+    snap_path = '{exp_dir}/checkpoints'.format(**locals())
+    safe_mkdir(snap_path)
+    return '{snap_path}'.format(**locals())
 
 
 

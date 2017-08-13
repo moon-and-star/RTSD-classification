@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-from config import init_config
+from .config import init_config
 import sys
-from util import safe_mkdir
+from .util import safe_mkdir
 
 
 
