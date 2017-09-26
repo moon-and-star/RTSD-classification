@@ -1,4 +1,11 @@
 #!/usr/bin/env python
+from util.config import get_config, set_config
+from util.util import confirm, experiment_directory 
+from util.util import read_gt, exp_gt_path, log_path
+
+import os.path as osp
+import os
+from random import shuffle
 
 
 def check_existence(config):
@@ -98,15 +105,6 @@ def upload_results(config):
 
 
 def train(args):   
-    from util.config import get_config, set_config
-    from util.util import confirm, experiment_directory 
-    from util.util import read_gt, exp_gt_path, log_path
-
-    import os.path as osp
-    import os
-    from random import shuffle
-
-
     check_experiment(args)
     config = get_config(args.confpath)
     copy_config(config)

@@ -10,7 +10,11 @@ def test_caffe(config):
 
 def test_keras(config):
     from .keras_scripts.test import test_net
-    test_net(config)
+    import os
+    
+    os.environ["CUDA_VISIBLE_DEVICES"] = "2"
+    phases = ['val', 'test'] # do not set phase to "train" without changing test script. set train batch size to 1 first
+    test_net(config, phases)
 
 
 

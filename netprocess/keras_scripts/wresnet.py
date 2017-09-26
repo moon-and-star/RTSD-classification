@@ -32,7 +32,7 @@ import keras.backend as K
 import json
 import time
 
-from util.util import  num_of_classes, dataset_size, checkpoint_path, log_path, log_directory, experiment_directory
+from util.util import  num_of_classes, dataset_size, checkpoint_dir, log_path, log_directory, experiment_directory
 from .image_datagen import image_generator
 
 
@@ -206,7 +206,8 @@ def prepare_model(config):
 
 def prepare_checkpointer(config):
     period = config['train_params']['snap_epoch']
-    filepath = "{}/checkpoint".format(checkpoint_path(config))
+    name = 'weights.{epoch:02d}.hdf5'
+    filepath = "{}/{}".format(checkpoint_dir(config), name)
 
     checkpointer = ModelCheckpoint(filepath, 
                                    monitor='val_acc', 
@@ -218,14 +219,14 @@ def prepare_checkpointer(config):
 
 
 def get_callbacks(config):
-    # lr_scheduler = prepare_scheduler(config)
-    reduce_lr = ReduceLROnPlateau(monitor='val_acc', factor=0.2, patience=5, verbose=1, epsilon=0.005, min_lr=0.0001)
+    lr_scheduler = prepare_scheduler(config)
+    # reduce_lr = ReduceLROnPlateau(monitor='val_acc', factor=0.2, patience=5, verbose=1, epsilon=0.005, min_lr=0.0001)
     checkpointer = prepare_checkpointer(config)
     logger = CSVLogger(log_path(config), separator=',', append=False)
     stopping = EarlyStopping(monitor='val_acc', patience=10, mode='auto')
     visualizer = TensorBoard(log_dir=log_directory(config, 'tensorboard_logs'), write_graph=True, histogram_freq=1)
 
-    return [reduce_lr, checkpointer, logger, stopping, visualizer]
+    return [lr_scheduler, checkpointer, logger, stopping, visualizer]
 
 
 def save_history(history, config):
