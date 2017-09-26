@@ -114,7 +114,7 @@ def snapshot_path(config):
     return '{snap_path}/snap'.format(**locals())
 
 
-def checkpoint_path(config):
+def checkpoint_dir(config):
     exp_dir = experiment_directory(config)
     snap_path = '{exp_dir}/checkpoints'.format(**locals())
     safe_mkdir(snap_path)
