@@ -1,0 +1,1 @@
+densenet with depth = 40 and growth_rate = 6
