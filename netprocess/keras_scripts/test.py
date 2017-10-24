@@ -7,8 +7,9 @@ from util.util import safe_mkdir, checkpoint_dir
 
 from keras.models import load_model
 from .image_datagen import image_generator
-from .wresnet import prepare_model
+
 import os
+import os.path as osp
 
 
 from itertools import islice
@@ -80,8 +81,6 @@ def gather_misclassified(model, config, phase):
 
         count += 1
 
-    
-
 
 
 def class_accuracies(model, config, phase):
@@ -98,8 +97,8 @@ def class_accuracies(model, config, phase):
         pred = model.predict(item[0], batch_size=1)
         prediction = np.argmax(pred)
 
+        actual_clid = get_clid_by_label(actual_label, test_gen.class_indices)
         if actual_label == prediction:
-            actual_clid = get_clid_by_label(actual_label, test_gen.class_indices)
             accuracies[actual_clid] += 1
         class_sizes[actual_clid] += 1
 
@@ -134,10 +133,23 @@ def save_results(config, phase, res, class_acc, names):
 
 
 
+def rm_old_results(config):
+    path = '{}/misclassified/'.format(experiment_directory(config))
+    if osp.exists(path):
+        shutil.rmtree(path)
+    
+
 
 def test_net(config, phases):
-    shutil.rmtree('{}/misclassified/'.format(experiment_directory(config)))
-    print('preparing model')
+    rm_old_results(config)
+    print('gpu_num = ', config['train_params']['gpu_num'])
+    
+    if config['model'] == 'wresnet':
+        from .wresnet import prepare_model
+    elif config["model"] == 'densenet':
+        from .densenet import prepare_model
+
+    print('preparing model')    
     model = prepare_model(config) 
     model.load_weights(best_checkpoint(config)) 
 
