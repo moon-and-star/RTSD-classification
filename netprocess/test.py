@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import os
 
 def test_caffe(config):
     from .caffe_scripts.test_net import test_net
@@ -9,10 +10,12 @@ def test_caffe(config):
 
 
 def test_keras(config):
-    from .keras_scripts.test import test_net
-    import os
-    
-    os.environ["CUDA_VISIBLE_DEVICES"] = "2"
+    from .keras_scripts.test import test_net 
+
+    gpu_num = "1, 2"
+    config["train_params"]['gpu_num'] = gpu_num
+    os.environ["CUDA_VISIBLE_DEVICES"] = gpu_num
+
     phases = ['val', 'test'] # do not set phase to "train" without changing test script. set train batch size to 1 first
     test_net(config, phases)
 
