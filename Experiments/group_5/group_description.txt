@@ -1,0 +1,1 @@
+fixed learning rate schedule (only depends on epoch number)
