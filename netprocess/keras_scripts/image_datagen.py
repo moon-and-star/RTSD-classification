@@ -26,7 +26,7 @@ def init_generator(config, phase):
 
 
 
-def image_generator(config, phase):
+def image_generator(config, phase, test_batch_size=1):
     datagen = init_generator(config, phase)
     root = config['img']['processed_path']
     directory = '{root}/{phase}'.format(**locals())
@@ -37,7 +37,8 @@ def image_generator(config, phase):
         batch_size = config['train_params']['batch_size']
     else: 
         shuffle = False
-        batch_size = 1
+        print('batch_size for {} = {}'.format(phase, test_batch_size))
+        batch_size = test_batch_size
     
     generator = datagen.flow_from_directory(
             directory,  
