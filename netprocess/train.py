@@ -58,8 +58,15 @@ def train_keras(config):
     os.environ["KERAS_BACKEND"] = 'tensorflow'
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
-    from .keras_scripts.wresnet import train_wresnet
-    train_wresnet(config)
+    if config['model'] == 'wresnet':
+        from .keras_scripts.wresnet import train_wresnet
+        train_wresnet(config)
+    elif config['model'] == 'densenet':
+        from .keras_scripts.densenet import train_densenet
+        train_densenet(config)
+    else:
+        print("ERROR: unknown model {}".format(config['model']))
+        exit()
 
 
 
