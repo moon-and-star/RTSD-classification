@@ -261,7 +261,7 @@ def train_wresnet(config):
                                   validation_data=val_gen,
                                   validation_steps=val_size, #batch_size for validation == 1
                                   callbacks=callbacks)
-    model.save('{}/latest_version.h5'.format(checkpoint_path(config)))
+    model.save('{}/latest_version.h5'.format(checkpoint_dir(config)))
     save_history(history, config)
     
 
