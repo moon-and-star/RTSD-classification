@@ -25,7 +25,11 @@ def save_table(table, path=''):
         json.dump(table, out, indent=4)
 
 
-def gather_test(group, exp_range):
+
+
+
+if __name__ == '__main__':
+    group = 6
     table = []
     for exp_num in range(19):
         entry = {}
@@ -47,40 +51,3 @@ def gather_test(group, exp_range):
     print(json.dumps(sorted_table, indent=4)
 
     save_table(sorted_table, path='./Experiments/group_{group}/results'.format(**locals()))
-
-
-
-
-# gather all results
-# group: number of group to gather results from
-# exp_range: list of exp numbers to take into account
-def gather_results(group, exp_range):
-    gather_test(group, exp_range)
-
-
-
-if __name__ == '__main__':
-    group = 6
-    exp_range = range(10)
-    gather_results(group, exp_range)
-    # table = []
-    # for exp_num in range(19):
-    #     entry = {}
-    #     entry['exp_num'] = exp_num
-    #     for phase in ['val', 'test']:
-    #         phase_entry = {}
-    #         exp_dir = './Experiments/group_{group}/exp_{exp_num}'.format(**locals())
-    #         with open('{exp_dir}/test_results_{phase}.txt'.format(**locals())) as f:
-    #             for line in f.readlines():
-    #                 s = line.split()
-    #                 metric = s[0].strip()
-    #                 print(s)
-    #                 value = float(s[1])
-    #                 phase_entry[metric] = value
-    #         entry[phase] = phase_entry
-    #     table +=[entry]
-    
-    # sorted_table = sorted(table, key = lambda x: x['test']['acc'])
-    # print(json.dumps(sorted_table, indent=4)
-
-    # save_table(sorted_table, path='./Experiments/group_{group}/results'.format(**locals()))
