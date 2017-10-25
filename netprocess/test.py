@@ -16,7 +16,7 @@ def test_keras(config):
     config["train_params"]['gpu_num'] = gpu_num
     os.environ["CUDA_VISIBLE_DEVICES"] = gpu_num
 
-    phases = ['val', 'test'] # do not set phase to "train" without changing test script. set train batch size to 1 first
+    phases = ['val', 'test', 'train'] # do not set phase to "train" without changing test script. set train batch size to 1 first
     test_net(config, phases)
 
 
