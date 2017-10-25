@@ -139,9 +139,7 @@ def rm_old_results(config):
         shutil.rmtree(path)
     
 
-
-def test_net(config, phases):
-    rm_old_results(config)
+def load_model(config):
     print('gpu_num = ', config['train_params']['gpu_num'])
     
     if config['model'] == 'wresnet':
@@ -153,13 +151,18 @@ def test_net(config, phases):
     model = prepare_model(config) 
     model.load_weights(best_checkpoint(config)) 
 
+    return model    
 
+
+def test_net(config, phases):
+    rm_old_results(config)
+    model = load_model(config)
+    
     for phase in phases:
         print('gettig results for {}'.format(phase))
         
         gather_misclassified(model, config, phase)
         class_acc = class_accuracies(model, config, phase)
-        # class_acc = class_accuracies(model, test_gen, dataset_size(config, phase), num_of_classes(config))
         test_gen = image_generator(config, phase, test_on_train=True)
         res = model.evaluate_generator(test_gen, dataset_size(config, phase))
         
