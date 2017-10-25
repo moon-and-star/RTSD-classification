@@ -60,8 +60,8 @@ def get_clid_by_label(label, class_indices):
 
 
 import shutil
-def gather_misclassified(model, config, phase):
-    test_gen = image_generator(config, phase)
+def gather_misclassified(model, config, phase, batch_size=1):
+    test_gen = image_generator(config, phase, test_batch_size=batch_size, test_on_train=True)
     print(test_gen.class_indices)
     names = test_gen.filenames
     
@@ -83,8 +83,8 @@ def gather_misclassified(model, config, phase):
 
 
 
-def class_accuracies(model, config, phase):
-    test_gen = image_generator(config, phase)
+def class_accuracies(model, config, phase, batch_size=1):
+    test_gen = image_generator(config, phase, test_batch_size=batch_size, test_on_train=True)
     size = dataset_size(config, phase)
     class_num = num_of_classes(config)
 
@@ -153,13 +153,14 @@ def test_net(config, phases):
     model = prepare_model(config) 
     model.load_weights(best_checkpoint(config)) 
 
+
     for phase in phases:
         print('gettig results for {}'.format(phase))
         
         gather_misclassified(model, config, phase)
         class_acc = class_accuracies(model, config, phase)
         # class_acc = class_accuracies(model, test_gen, dataset_size(config, phase), num_of_classes(config))
-        test_gen = image_generator(config, phase)
+        test_gen = image_generator(config, phase, test_on_train=True)
         res = model.evaluate_generator(test_gen, dataset_size(config, phase))
         
         print('saving results for {}'.format(phase))
