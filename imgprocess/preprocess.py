@@ -49,7 +49,7 @@ def crop(img, x1, y1, x2, y2, expand = 0, size=48, border='replicate'):
     rescaled = getResceled(img, x_scale, y_scale)
 
     origin = x_scale * (x1 + x2) / 2.0, y_scale * (y1 + y2) / 2.0
-    radius = size / 2 + expand
+    radius = int(size / 2 + expand)
     pad = getPad(origin, radius, rescaled.shape)
     
     bordered = getBordered(rescaled, pad, border)

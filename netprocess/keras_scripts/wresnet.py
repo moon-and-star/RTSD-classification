@@ -239,14 +239,19 @@ def save_history(history, config):
 
 
 def train_wresnet(config):
+    val_ratio = config['img']['val_ratio']
     batch_size = config['train_params']['batch_size']
     nb_epoch = config['train_params']['epoch_num']
 
     train_gen = image_generator(config, 'train')
     train_size = dataset_size(config, 'train')
-    
-    val_gen = image_generator(config, 'val')
-    val_size = dataset_size(config, 'val')
+
+    if val_ratio > 0:
+        val_gen = image_generator(config, 'val')
+        val_size = dataset_size(config, 'val')
+    else:
+        val_gen = image_generator(config, 'train', test_on_train=True)
+        val_size = dataset_size(config, 'train')
     
     
     model = prepare_model(config)
