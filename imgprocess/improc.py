@@ -1,12 +1,25 @@
 #!/usr/bin/env python
 
+from .preprocess import process
+from util.config import get_config
+from imgprocess.marking import classification_marking, save_marking
+from .crop import marking2cropped
+from imgprocess.marking import load_classification_marking
+
 def crop2proc(args):
     config = get_config(args.confpath)
     img = config['img']
     rootpath = img['cropped_path']
     outpath = img['processed_path']
 
-    for phase in ['train', 'test', 'val']:
+    phases = ['train']
+    if config['img']['test_ratio'] > 0:
+        phases.append('test')
+
+    if config['img']['val_ratio'] > 0:
+        phases.append('val')
+
+    for phase in phases:
         process(rootpath, outpath, phase, 
             border=img['border'], 
             pad=img['padding'],
@@ -21,7 +34,7 @@ def process_marking(args):
     marking = classification_marking(
                     path, 
                     seed=config['randseed'],
-                    threshold=img['min_class_size'],
+                    # threshold=img['min_class_size'], #old parameter
                     test_ratio=img['test_ratio'],
                     val_ratio=img['val_ratio'])
     save_marking(marking, path, img['classmark_prefix'])
@@ -43,12 +56,6 @@ def uncut2cropped(args): #full images to classification set
 
 
 def improc(args):
-    from .preprocess import process
-    from util.config import get_config
-    from .imgprocess.marking import classification_marking, save_marking
-    from .crop import marking2cropped
-    from .marking import load_classification_marking
-
     if args.uncut:
         uncut2cropped(args)
     if args.cropped:

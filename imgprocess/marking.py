@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+# !/usr/bin/env python
 import json
 import random
 from util.util import safe_mkdir, removekey
@@ -58,7 +58,7 @@ def get_classification_labels(classes):
     return tmp
 
 
-
+# this function is for gathering marking from 2 marking files: for train and for test
 def gather_signs(path):
     res = {}
     for phase in ["train", "test"]:
@@ -80,7 +80,8 @@ def remove_unknown(classes):
     print("Number of classes after removing unknown: {}".format(len(sorted(classes))))
     return classes
            
-
+#this function had been used when there was only 1 threshold for class size:
+# total number of sign images in class
 def remove_small(classes, threshold):
     for class_name in sorted(classes):
         if len(classes[class_name]) < threshold:
@@ -98,7 +99,6 @@ def sort_by_id(unsorted):
     return res
 
 from bisect import bisect
-
 
 def get_random_suitable(cl, size):
     #sort phys signs according to their nomber of instances]
@@ -123,10 +123,12 @@ def unsort_idsorted(idsorted):
         res += idsorted[phys_sign]
     return res
 
-
-def split_class(total, ratio):
+# old function for unified splitting for all classes
+# usually used after removing small classes
+#propotional split
+def val_split_class(total, ratio):
     total_size = len(total)
-    part_size = int(total_size * ratio) 
+    part_size = int(total_size * ratio)
     curr_size = 0
     rest = sort_by_id(total)
     part = {}
@@ -136,44 +138,182 @@ def split_class(total, ratio):
         part[phys_sign] = rest[phys_sign]
         curr_size += len(rest[phys_sign])
         del rest[phys_sign]
-    part = unsort_idsorted(part) 
+
+    # if all physical signs fell into validation part (rest is empty)
+    # this means that this class is too small for that ratio
+    if len(rest) == 0:
+        rest, part = part, rest
+
+    part = unsort_idsorted(part)
+    rest = unsort_idsorted(rest)
+
+    return part, rest
+
+def val_split(total, ratio):
+    total_part, total_rest = {}, {}
+
+    for class_name in sorted(total):
+        class_part, class_rest = val_split_class(total[class_name], ratio)
+        # print(len(total[class_name]), len(class_part), len(class_rest))
+        total_part[class_name] = class_part
+        total_rest[class_name] = class_rest
+
+    return total_rest, total_part
+
+
+# extracts max represented sign from class and returns it
+def take_out_max(idsorted):
+    max = 0
+    id_of_max = sorted(idsorted)[0]
+
+    for id in idsorted:
+        if max < len(idsorted[id]): # if found physical sign with n=more images
+            max = len(idsorted[id])
+            id_of_max = id
+
+    sign_imgs = idsorted[id_of_max]
+    del idsorted[id_of_max]
+
+    return id_of_max, sign_imgs
+
+# takes out set of physical signs that satisfies specified thresholds
+#uses greedy algorithm
+def greedy_selection(idsorted, min_phys=5., min_imgs=25.):
+    part = {}
+    curr_imgs = 0
+    curr_phys = 0
+    while curr_imgs < min_imgs or curr_phys < min_phys:  # greedy selection of physical sign
+        sign_id, images = take_out_max(idsorted)
+        part[sign_id] = images
+        curr_phys += 1
+        curr_imgs += len(images)
+
+    return part
+
+
+
+# new version of class splitter: multiple thresholds
+# (min/max for both physical signs and sign images inside class)
+# TODO add threshold parameters
+def tsplit_class(total):
+    idsorted = sort_by_id(total)
+    num_of_imgs = len(total)
+    num_of_phys = len(set(sorted(idsorted)))
+    rest = {}
+
+    if num_of_phys < 5 or num_of_imgs < 25:
+        part = idsorted
+    elif num_of_imgs < 125:
+        part = greedy_selection(idsorted, min_phys=5, min_imgs=25)
+        rest = idsorted
+    elif num_of_imgs < 5000:
+        part = greedy_selection(idsorted, min_phys=5, min_imgs=0.2 * num_of_imgs)
+        rest = idsorted
+    else:
+        part = greedy_selection(idsorted, min_phys=5, min_imgs=1000)
+        rest = idsorted
+
+    part = unsort_idsorted(part)
     rest = unsort_idsorted(rest)
 
     return part, rest
 
 
-def split_proportionally(total, ratio):
+# TODO add parameters for thresholds
+# splits all classes using thresholds for physical signs and sign images count
+def threshold_split(total):
     total_part, total_rest = {}, {}
 
     for class_name in sorted(total):
-        class_part, class_rest = split_class(total[class_name], ratio)
+        class_part, class_rest = tsplit_class(total[class_name])
         # print(len(total[class_name]), len(class_part), len(class_rest))
+        # if len(class_part) > 0:
         total_part[class_name] = class_part
+        # if len(class_rest) > 0: # if there is something in class
         total_rest[class_name] = class_rest
 
-    return total_part, total_rest
+    return total_rest, total_part
+
     
 
-def split(classes, test_ratio=0.2, val_ratio=0):
-    print("splitting: test/rest")
-    test, rest = split_proportionally(classes, test_ratio)
-    print("splitting: val/train")
-    val, train = split_proportionally(rest, val_ratio)
+# def split(classes, test_ratio=0.2, val_ratio=0.):
+    # print("splitting: test/rest")
+#     # test, rest = split_proportionally(classes, test_ratio)
+#     # test, rest = threshold_split(classes)
+#     print("splitting: val/train")
+#     val, train = split_proportionally(rest, val_ratio)
+#
+#     return train, test, val
 
-    return train, test, val
         
-  
 
 
-def classification_marking(path, threshold=100, seed=42, test_ratio=0.2, val_ratio=0.1):
-    random.seed(seed)
-    gathered = gather_signs(path) #gather signs from 2 markings into one dictionary (key = sign_class)
-    print("Number of classes : {}".format(len(sorted(gathered))))
-    reduced = remove_small(remove_unknown(gathered), threshold)
+#converts initial labelling (by images) to labelling organized by classes
+def organize_by_classes(marking):
+    res = {}
+    for pict_name in sorted(marking):
+        for sign in marking[pict_name]:
+            sign['pict_name'] = pict_name
+            #strip: "unknown_unmarked" should be equal "unknown_unmarked " (occures in original marking)
+            res.setdefault(sign["sign_class"].strip(), []).append(sign)
+    print("Number of classes : {}".format(len(sorted(res))))
+    return res
 
-    train, test, val = split(reduced, test_ratio=test_ratio, val_ratio=val_ratio)
+
+def remove_empty(selection):
+    classes = []
+    for class_name in selection:
+        if len(selection[class_name]) == 0:
+            classes.append(class_name)
+
+    for class_name in classes:
+        del selection[class_name]
+
+def intersect_by_classes(selection_1, selection_2):
+    remove_empty(selection_1)
+    remove_empty(selection_2)
+    common_classes = set(selection_1).intersection(set(selection_2))
+    print("in common: ", len(common_classes))
+    selection_1 = { k:selection_1[k] for k in common_classes}
+    selection_2 = {k: selection_2[k] for k in common_classes}
+
+    return selection_1, selection_2
+
+
+def raw_split(path):
+    total_marking = load_marking("{path}/new_marking.json".format(**locals()))
+    organized = organize_by_classes(total_marking)
+    train, test = threshold_split(organized)
+    marking = {'train': train, 'test': test}
+    save_marking(marking, path, prefix="marking")
+
+
+def classification_marking(path, seed=42, test_ratio=0.2, val_ratio=0.0):
+    raw_split(path)
+
+    total_marking = load_marking("{path}/new_marking.json".format(**locals()))
+    no_ignored = remove_ignored(total_marking)
+    organized = organize_by_classes(no_ignored)
+    known = remove_unknown(organized)
+
+    train, test = threshold_split(known)
+    train, test = intersect_by_classes(train, test)
+    train, val = val_split(train, ratio=val_ratio)
     marking = {'train': train, 'val': val, 'test': test}
+
     return marking
+
+
+#previous version (when latest marking was spread across 2 files for train and test)
+# def classification_marking(path, threshold=100, seed=42, test_ratio=0.2, val_ratio=0.1):
+#     random.seed(seed)
+#     gathered = gather_signs(path) #gather signs from 2 markings into one dictionary (key = sign_class)
+#     print("Number of classes : {}".format(len(sorted(gathered))))
+#     reduced = remove_small(remove_unknown(gathered), threshold)
+#
+#     train, test, val = split(reduced, test_ratio=test_ratio, val_ratio=val_ratio)
+#     marking = {'train': train, 'val': val, 'test': test}
+#     return marking
 
 
 
@@ -186,10 +326,13 @@ def save_marking(marking, path, prefix):
             f.write(content)
 
 
+# if __name__ == '__main__':
+#     print("detection marking -> classification marking")
+#     rootpath = '../global_data/Traffic_signs/RTSD'
+#     marking = classification_marking(rootpath, threshold=100, seed=42)
+#     save_marking(marking, rootpath)
 
-if __name__ == '__main__':
-    print("detection marking -> classification marking")
-    rootpath = '../global_data/Traffic_signs/RTSD'
-    marking = classification_marking(rootpath, threshold=100, seed=42)
-    save_marking(marking, rootpath)
+
+    
+
     
