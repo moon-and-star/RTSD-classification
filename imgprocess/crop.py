@@ -1,10 +1,10 @@
-#!/usr/bin/env python
+# !/usr/bin/env python
 import json
 from pprint import pprint
 import cv2
 # import matplotlib.pyplot as plt
 from util.util import safe_mkdir
-from marking import load_marking
+from .marking import load_marking
 
 
 
@@ -51,7 +51,7 @@ def class2lab(marking, path=None): # marking without phase
 
 
 def lab2class(marking, path=None):
-	mapping = {y:x for (x,y) in class2lab(marking).iteritems()}
+	mapping = {y:x for (x,y) in class2lab(marking).items()}
 
 	if path != None:
 		with open(path, 'w') as f:
