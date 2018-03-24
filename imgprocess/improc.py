@@ -5,12 +5,18 @@ from util.config import get_config
 from imgprocess.marking import classification_marking, save_marking
 from .crop import marking2cropped
 from imgprocess.marking import load_classification_marking
+from shutil import rmtree
+
 
 def crop2proc(args):
     config = get_config(args.confpath)
     img = config['img']
     rootpath = img['cropped_path']
     outpath = img['processed_path']
+    rmtree(outpath, ignore_errors=True)
+    rmtree(outpath, ignore_errors=True)
+    print("Removed old preprocecessed signs")
+
 
     phases = ['train']
     if config['img']['test_ratio'] > 0:
@@ -31,9 +37,16 @@ def process_marking(args):
     config = get_config(args.confpath)
     img = config['img']
     path = img['marking_path']
+
+    groupped = False
+    if 'groupped' in img:
+        groupped = img['groupped']
+
+
     marking = classification_marking(
                     path, 
                     seed=config['randseed'],
+                    group=groupped,
                     # threshold=img['min_class_size'], #old parameter
                     test_ratio=img['test_ratio'],
                     val_ratio=img['val_ratio'])
@@ -45,6 +58,9 @@ def process_imgs(args):
     img = get_config(args.confpath)['img']
     marking = load_classification_marking(img['marking_path'], img['classmark_prefix'])
     img_path, cropped_path = img['uncut_path'], img['cropped_path']
+    rmtree(cropped_path, ignore_errors=True)
+    print("Removed old cropped images")
+
     marking2cropped(marking=marking, img_path=img_path, cropped_path=cropped_path)
 
 

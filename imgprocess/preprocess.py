@@ -1,11 +1,44 @@
 #!/usr/bin/env python
 import cv2
-import PIL.ImageOps
 import numpy as np
-from os import makedirs 
-from shutil import copyfile
+from shutil import copyfile, rmtree
 from util.util import safe_mkdir
-from skimage.io import imread, imsave
+
+
+def histeq(img):
+    ycbcr = cv2.cvtColor(img, cv2.COLOR_BGR2YCR_CB)
+    ycbcr[:,:,0] = cv2.equalizeHist(ycbcr[:,:,0])
+    return cv2.cvtColor(ycbcr, cv2.COLOR_YCR_CB2BGR)
+
+
+
+def autoContrast(img, frac=0.1):
+    lab = cv2.cvtColor(img, cv2.COLOR_BGR2LAB)
+    Y = lab[:,:, 0].astype(np.float32)
+    Ysorted = np.sort(Y.reshape(-1))
+    m = int(len(Ysorted) * frac)
+    Ysorted = Ysorted[m:-m]
+
+    ymin, ymax = Ysorted[0], Ysorted[-1]
+    alpha = 255. / (ymax-ymin)
+    # print((Y - ymin) * alpha)
+    # print ((ymax - ymin) * alpha )
+
+    Y =  ((Y - ymin) * alpha)
+    Y[Y < 0] = 0
+    Y[Y > 255] = 255
+    lab[:,: ,0] = Y.astype(np.uint8)
+    return cv2.cvtColor(lab, cv2.COLOR_LAB2BGR)
+
+
+
+def adaHE(img):
+    clahe = cv2.createCLAHE(clipLimit=3.0, tileGridSize=(2,2))
+
+    lab = cv2.cvtColor(img, cv2.COLOR_BGR2LAB)
+    lab[:,:,0] = clahe.apply(lab[:,:,0])
+
+    return cv2.cvtColor(lab, cv2.COLOR_LAB2BGR)
 
 
 def getPad(origin, radius, shape):
@@ -94,12 +127,13 @@ def saveImgInfo(outpath, phase, mean, total, new_gt, mapping):
 
 
 rate = 100
+
 def process(rootpath, outpath, phase, size=32, pad=4, border='replicate'):
     #preparations
     with  open('{}/gt_{}.txt'.format(rootpath, phase)) as f: # open file to read labels (and, may be coords)
         markup = f.readlines() 
     mean = np.zeros((3, size + pad * 2, size + pad * 2), dtype=np.float32)
-    total = 0; total = 0; new_gt = []; mapping = {}
+    total = 0; new_gt = []; mapping = {}
 
     for image_name, clid in sorted([x.replace('\r\n', '').split(',') for x in markup]):
         clid = int(clid)
@@ -110,6 +144,7 @@ def process(rootpath, outpath, phase, size=32, pad=4, border='replicate'):
         img = cv2.imread("{}/{}/{}".format(rootpath,phase,image_name))
         m, n, _ = img.shape
         transformed = crop(img, x1=0, y1=0, y2=m-1, x2=n-1, expand=pad,size=size, border=border)
+        # transformed = histeq(transformed)
         accumulate(mean, transformed)
 
         #save transformed

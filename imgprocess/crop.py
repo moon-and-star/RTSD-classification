@@ -1,10 +1,7 @@
 # !/usr/bin/env python
 import json
-from pprint import pprint
 import cv2
-# import matplotlib.pyplot as plt
 from util.util import safe_mkdir
-from .marking import load_marking
 
 
 
@@ -121,6 +118,7 @@ def crop_and_save(sign_mapping, class_mapping, input_path='', output_path=''):
 
 def marking2cropped(marking=None, img_path='', cropped_path=''):
 	print('\nmarking -> cropped')
+	safe_mkdir(cropped_path)
 	class2lab_mapping = class2lab(marking['train'], cropped_path + '/classes-to-labels.json')
 	lab2class_mapping = lab2class(marking['train'], cropped_path + '/labels-to-classes.json')
 	sign_mapping = sign2id(marking, cropped_path + '/id-to-sign_{}.json') #note: {} is for phase insertion (see sign2id definition)

@@ -288,7 +288,66 @@ def raw_split(path):
     save_marking(marking, path, prefix="marking")
 
 
-def classification_marking(path, seed=42, test_ratio=0.2, val_ratio=0.0):
+
+def get_group_id(class_id):
+    if "1_1" <= class_id <= "1_8" or "2_3" <= class_id <= "2_4":
+        return "red_triangles"
+
+    elif "2_1" <= class_id <= "2_2":
+        return "main_road"
+
+    elif "2_6" == class_id or "3_10" <= class_id <= "3_20" or \
+            "3_24_n" <= class_id <= "3_24_n80" or "3_32" <= class_id <= "3_7":
+        return "red_circle"
+
+    elif "2_7" == class_id or "5_11" <= class_id <= "6_15_3" or \
+            "6_2_n" <= class_id <= "7_7":
+        return "blue_rectangle"
+
+    elif "2_5" == class_id or "3_1" == class_id:
+       return "fully_red"
+
+    elif "3_21" == class_id or "3_31" == class_id or \
+            "3_25_n" <= class_id <= "3_25_n80":
+        return "grey_circle"
+
+    elif "3_27" <= class_id <= "3_30":
+        return "blue_and_red_circle"
+
+    elif "4_1_1" <= class_id <= "4_5":
+        return "blue_circle"
+
+    elif "8_13" <= class_id <= "8_8" or "6_16" == class_id or \
+            "4_8_2" == class_id or "4_8_3" == class_id:
+        return "white_rectangle"
+
+    else:
+        print("WARNING: unknown class id: ", class_id)
+        return "UNKNOWN"
+
+
+def set_class_id(bboxes, id):
+    for bbox in bboxes:
+        bbox["sign_class"] = id
+    return bboxes
+
+
+def group_classes(class_marking):
+    groupped = {}
+    for class_id in class_marking:
+        group_id = get_group_id(class_id)
+
+        groupped.setdefault(group_id, []).extend(
+            set_class_id(class_marking[class_id], group_id))
+
+    print("Number of classes after groupping: ", len(groupped))
+    for id in groupped:
+        print(id, " ", len(groupped[id]))
+    exit(0)
+    return  groupped
+
+
+def classification_marking(path, group=False, seed=42, test_ratio=0.2, val_ratio=0.0):
     raw_split(path)
 
     total_marking = load_marking("{path}/new_marking.json".format(**locals()))
@@ -296,12 +355,26 @@ def classification_marking(path, seed=42, test_ratio=0.2, val_ratio=0.0):
     organized = organize_by_classes(no_ignored)
     known = remove_unknown(organized)
 
+    if group:
+        known = group_classes(known)
+
     train, test = threshold_split(known)
     train, test = intersect_by_classes(train, test)
     train, val = val_split(train, ratio=val_ratio)
     marking = {'train': train, 'val': val, 'test': test}
 
     return marking
+
+
+
+# def grouppedClassMarking(path, test_ratio=0.0, val_ratio=0.0):
+#     total_marking = load_marking("{path}/new_marking.json".format(**locals()))
+#     no_ignored = remove_ignored(total_marking)
+#     organized = organize_by_classes(no_ignored)
+#     known = remove_unknown(organized)
+#
+#     groupped = group_classes(known)
+
 
 
 #previous version (when latest marking was spread across 2 files for train and test)
@@ -325,12 +398,6 @@ def save_marking(marking, path, prefix):
             content = json.dumps(marking[phase], indent=4, sort_keys=True)
             f.write(content)
 
-
-# if __name__ == '__main__':
-#     print("detection marking -> classification marking")
-#     rootpath = '../global_data/Traffic_signs/RTSD'
-#     marking = classification_marking(rootpath, threshold=100, seed=42)
-#     save_marking(marking, rootpath)
 
 
     
