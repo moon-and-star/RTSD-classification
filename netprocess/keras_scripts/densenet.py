@@ -238,7 +238,7 @@ def prepare_scheduler(config):
     
     def lr_sch(epoch):
         lr = config['solver_exact']['base_lr']
-        gamma = lr = config['solver_exact']['gamma']
+        gamma = config['solver_exact']['gamma']
         epoch_num = config['train_params']['epoch_num']
         if epoch >= epoch_num * 0.75:
             return lr * gamma**2

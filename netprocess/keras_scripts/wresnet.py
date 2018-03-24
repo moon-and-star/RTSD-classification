@@ -185,7 +185,7 @@ def prepare_scheduler(config):
     
     def lr_sch(epoch):
         lr = config['solver_exact']['base_lr']
-        gamma = lr = config['solver_exact']['gamma']
+        gamma = config['solver_exact']['gamma']
         step = config['train_params']['lr_step']
         
         return lr * gamma**(epoch//step)

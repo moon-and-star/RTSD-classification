@@ -12,11 +12,13 @@ def test_caffe(config):
 def test_keras(config):
     from .keras_scripts.test import test_net 
     
-    gpu_num = "1, 2"
+    gpu_num = "0"
     config["train_params"]['gpu_num'] = gpu_num
     os.environ["CUDA_VISIBLE_DEVICES"] = gpu_num
 
-    phases = ['val', 'test', 'train'] # do not set phase to "train" without changing test script. set train batch size to 1 first
+    phases = ['test', 'train'] # do not set phase to "train" without changing test script. set train batch size to 1 first
+    if config['img']['val_ratio'] > 0:
+        phases.append('val')
     test_net(config, phases)
 
 

@@ -64,6 +64,9 @@ def train_keras(config):
     elif config['model'] == 'densenet':
         from .keras_scripts.densenet import train_densenet
         train_densenet(config)
+    elif config['model'] == 'MCDNN':
+        from .keras_scripts.mcdnn import train
+        train(config)
     else:
         print("ERROR: unknown model {}".format(config['model']))
         exit()

@@ -146,6 +146,10 @@ def load_model(config):
         from .wresnet import prepare_model
     elif config["model"] == 'densenet':
         from .densenet import prepare_model
+    elif config["model"] == 'MCDNN':
+        from .mcdnn import prepare_model
+    else:
+        print("Unknown model ", config["model"])
 
     print('preparing model')    
     model = prepare_model(config) 
