@@ -1,0 +1,1 @@
+experiments with MCDNN on new RTSD version (same version as used in group 7)

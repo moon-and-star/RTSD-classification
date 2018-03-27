@@ -1,0 +1,1 @@
+architecture from article about multi-column DNN for TS recognition (2012). Activation function: scaled tanh

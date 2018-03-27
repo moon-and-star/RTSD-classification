@@ -1,0 +1,1 @@
+mcdnn with correct weignt initialization (previously only convolutional layers were initialized from uniform distribution [-0.05, 0.05]. FC layers used default keras initialization. Now all layers use Uniform initializer (as in article))

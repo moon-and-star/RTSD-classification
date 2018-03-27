@@ -1,0 +1,2 @@
+wresnet experiments on new RTSD marking
+NO VALIDATION SET YET! validating on train
