@@ -70,7 +70,7 @@ def subsample_and_shortcut(x, nb_filters=16, subsample_factor=1):
     return subsample, shortcut
 
 
-def residual_block(x, nb_filters=16, subsample_factor=1):
+def residual_block(x, nb_filters=16, subsample_factor=1, enable_dropout=False):
     
     subsample, shortcut = subsample_and_shortcut(x, nb_filters, subsample_factor)
     
@@ -81,7 +81,8 @@ def residual_block(x, nb_filters=16, subsample_factor=1):
     
     y = BatchNormalization(axis=3)(y)
     y = Activation('relu')(y)
-    y = Dropout(0.5)(y)
+    if enable_dropout:
+        y = Dropout(0.5)(y)
     y = Conv2D(nb_filters, (3, 3), 
         kernel_initializer="he_normal", padding="same", data_format="channels_last", strides=(1,1))(y)
     
@@ -111,10 +112,12 @@ def conv1(inputs, config):
 def conv2(x, config):
     blocks_per_group = config['wide_resnet']['metablock_depth']
     widening_factor = config['wide_resnet']['width']
+    dropout = config['wide_resnet']['dropout']
     
     for i in range(0, blocks_per_group):
         nb_filters = 16 * widening_factor
-        x = residual_block(x, nb_filters=nb_filters, subsample_factor=1)
+        x = residual_block(x, nb_filters=nb_filters,
+                           subsample_factor=1,enable_dropout=dropout)
         
     return x
 

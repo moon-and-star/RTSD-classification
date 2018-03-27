@@ -51,9 +51,11 @@ def conv_act_pool(inputs, kernel_size=(3,3), filters=1, activation='stanh'):
 
 
 def fc_block(input, config):
-    x = Dense(300)(input)
+    init = keras.initializers.RandomUniform(minval=-0.05, maxval=0.05)
+    x = Dense(300, kernel_initializer=init)(input)
     x = add_activation(x, config['mcdnn']["activation"])
-    x = Dense(num_of_classes(config), activation='softmax')(x)
+    x = Dense(num_of_classes(config), activation='softmax',
+              kernel_initializer=init)(x)
     return x
 
 
