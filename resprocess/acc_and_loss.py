@@ -107,6 +107,17 @@ def plot_log(log, path=None, start_epoch=0):
  
 
 
+def pictogram(class_name):
+    pict_name = class_name + ".png"
+    directory = "../RTSD/pictograms/"
+    if pict_name in listdir(directory):
+        return (rescale(imread(directory + pict_name), 0.5) * 255).astype(np.uint8)
+    else:
+        for pict_name in reversed(sorted(listdir(directory))):
+            if pict_name.split('.')[0] in class_name and \
+                    ("n" in class_name or "r" in class_name or "3_4_1" in class_name):
+                return (rescale(imread(directory + pict_name), 0.5) * 255).astype(np.uint8)
+        return np.ones((32, 32, 3)).astype(np.uint8) * 255
 
 
 def get_log(exp_dir):

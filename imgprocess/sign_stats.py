@@ -129,12 +129,15 @@ def write_class_stats(class_stats):
             # print(row, file=fhandle)
         print('</table></body></html>', file=fhandle)
 
-
+#
+# def save_stats(stats):
+#     with open("")
 
 
 if __name__ == '__main__':
     stats = get_class_stats()
     write_class_stats(stats)
+    # save_stats(stats, "./")
 
 
 

@@ -51,13 +51,16 @@ def get_stats(prefix):
             stats[class_name][phase]['phys'] = len(id_set)
     return stats
 
+import sys
+def print_stats(stats, fhandle=None):
+    old_out = sys.stdout
+    if fhandle is not None:
+        sys.stdout = fhandle
 
-def print_stats(stats):
     content = "{:10}{:>15}{:>15}{:>15}{:>15}".format(
         'class', 'train_imgs', 'train_phys', 'test_imgs', 'test_phys')
-    print(len(stats))
-    print(content)
 
+    print(content)
     for class_ in sorted(stats.items(), key=lambda x: x[1]['train']['imgs'], reverse=True):
         class_name = class_[0]
         train_imgs = stats[class_name]['train']['imgs']
@@ -67,6 +70,9 @@ def print_stats(stats):
 
         content = "{class_name:10}{train_imgs:15}{train_phys:15}{test_imgs:15}{test_phys:15}".format(**locals())
         print(content)
+
+    if fhandle is not None:
+        sys.stdout = old_out
 
 
 
@@ -153,7 +159,6 @@ def extend_stats(stats):
 
 
 def get_time_marking_stats(path, prefix):
-
     stats = {}
     for phase in ['train', 'test']:
         phase_marking = load_marking("{path}/{prefix}_{phase}.json".format(**locals()))
@@ -197,7 +202,9 @@ if __name__ == '__main__':
 
 
     stats = get_stats('classmarking')
-    print_stats(stats)
+    path = '../global_data/Traffic_signs/RTSD/class_stats.txt'
+    with open(path, 'w')as f:
+        print_stats(stats, fhandle=f)
     write_marking_stats(stats, prefix='class_split', write_path='./')
 
     prefix = 'time_marking'
@@ -205,9 +212,9 @@ if __name__ == '__main__':
     raw_marking = load_marking('{}/new_marking.json'.format(path))
     write_time_marking(raw_marking, path, prefix)
 
-    time_stats = get_time_marking_stats(path, prefix)
-    print_stats(time_stats)
-    write_marking_stats(time_stats, prefix='time_split', write_path='./')
+    # time_stats = get_time_marking_stats(path, prefix)
+    # print_stats(time_stats)
+    # write_marking_stats(time_stats, prefix='time_split', write_path='./')
 
     # with open("{}/time_marking_test.json".format(path)) as f:
     #     test = json.load(f)

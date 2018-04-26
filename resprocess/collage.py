@@ -149,9 +149,9 @@ def write_correct(correct_dir, fhandle):
 
 if __name__ == '__main__':
     phase = 'test'
-    group = 9
+    group = 7
     train_img_dir = './local_data/RTSD/train'
-    for exp_num in range(3):
+    for exp_num in range(2):
         for phase in ["train", "test"]:
             print("exp_num = ", exp_num)
             exp_dir = './Experiments/group_{group}/exp_{exp_num}'.format(**locals())

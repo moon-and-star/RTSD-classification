@@ -3,10 +3,9 @@
 import numpy as np
 import matplotlib
 matplotlib.use('agg')
-import argparse
 from matplotlib import pyplot as plt
 from operator import itemgetter
-import seaborn
+
 
 def read_accuracies(exp_dir, phase):
     data = []
@@ -26,7 +25,7 @@ def read_accuracies(exp_dir, phase):
 
 
 def plot(data, labels, captions, path=None):
-    plt.figure(figsize=(20,10))
+    plt.figure(figsize=(25,10))
     
     ax = plt.subplot()
     ax.yaxis.grid(color='gray', linestyle='dashed')
@@ -36,7 +35,7 @@ def plot(data, labels, captions, path=None):
     tics = list(range(len(labels)))
     ax.set_xticks(tics)
     ax.set_xticklabels(labels, rotation="vertical", fontsize=20)
-    ax.tick_params(labelsize=20)
+    ax.tick_params(labelsize=10)
 
 
     bins = list(range(len(data)))
@@ -64,10 +63,10 @@ def histogram(exp_dir, phase):
     
     captions = {}
     captions['x'] = 'Class labels'
-    captions['title'] = 'Accuracy distibution {}'.format(300)
+    captions['title'] = 'Accuracy distibution'
     captions['y'] = 'Accuracy, %'
 
-    outpath = "{}/acc_dist.png".format(exp_dir)
+    outpath = "{}/acc_dist_{}.png".format(exp_dir, phase)
     plot(acc, labels, captions, outpath)
 
 
@@ -75,10 +74,10 @@ def histogram(exp_dir, phase):
     err = list(1 - np.array(acc))
     print(err, labels)
 
-    captions['title'] = 'Error distibution {}'.format(300)
+    captions['title'] = 'Error distibution'
     captions['y'] = 'Error, %'
 
-    outpath = "{}/err_dist.png".format(exp_dir)
+    outpath = "{}/err_dist_{}.png".format(exp_dir, phase)
     plot(err, labels, captions, outpath)
     
 
@@ -87,9 +86,9 @@ def histogram(exp_dir, phase):
 
 
 if __name__ == '__main__':
-    group = 5
-    for exp_num in range(19): 
-        for phase in ['val', 'test']:
+    group = 7
+    for exp_num in range(3):
+        for phase in ['train', 'test']:
             print(phase)
             exp_dir = './Experiments/group_{group}/exp_{exp_num}'.format(**locals())
             histogram(exp_dir, phase)

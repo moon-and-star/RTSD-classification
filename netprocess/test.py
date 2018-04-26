@@ -12,7 +12,7 @@ def test_caffe(config):
 def test_keras(config):
     from .keras_scripts.test import test_net 
     
-    gpu_num = "0"
+    gpu_num = "1"
     config["train_params"]['gpu_num'] = gpu_num
     os.environ["CUDA_VISIBLE_DEVICES"] = gpu_num
 
